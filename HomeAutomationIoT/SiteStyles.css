@@ -1,0 +1,21 @@
+﻿body { 
+}
+
+table tr td {
+    border: 1px solid black;
+    padding: 7px;
+}
+
+th {
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-bottom: 5px;
+}
+
+table {
+    border-collapse: collapse;
+}
+
+div {
+    font-family: Arial;
+}

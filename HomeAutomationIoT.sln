@@ -1,0 +1,39 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26430.15
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HomeAutomationIoTLibrary", "HomeAutomationIoTLibrary\HomeAutomationIoTLibrary.csproj", "{D499EB04-1B01-4BC3-B23F-C041C23DD0D8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HomeAutomationIoT", "HomeAutomationIoT\HomeAutomationIoT.csproj", "{0E2209AB-7623-43FB-9B38-74B64BE35DE3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HomeAutomationIoTAPI", "HomeAutomationIoTAPI\HomeAutomationIoTAPI.csproj", "{4172D304-7942-4AE0-AE71-AD0CD2CF735A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HomeAutomationIoTAPI.Tests", "HomeAutomationIoTAPI.Tests\HomeAutomationIoTAPI.Tests.csproj", "{63FDF623-0FD6-44A6-B392-20D140DA9696}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D499EB04-1B01-4BC3-B23F-C041C23DD0D8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D499EB04-1B01-4BC3-B23F-C041C23DD0D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D499EB04-1B01-4BC3-B23F-C041C23DD0D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D499EB04-1B01-4BC3-B23F-C041C23DD0D8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0E2209AB-7623-43FB-9B38-74B64BE35DE3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0E2209AB-7623-43FB-9B38-74B64BE35DE3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0E2209AB-7623-43FB-9B38-74B64BE35DE3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0E2209AB-7623-43FB-9B38-74B64BE35DE3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4172D304-7942-4AE0-AE71-AD0CD2CF735A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4172D304-7942-4AE0-AE71-AD0CD2CF735A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4172D304-7942-4AE0-AE71-AD0CD2CF735A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4172D304-7942-4AE0-AE71-AD0CD2CF735A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{63FDF623-0FD6-44A6-B392-20D140DA9696}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{63FDF623-0FD6-44A6-B392-20D140DA9696}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{63FDF623-0FD6-44A6-B392-20D140DA9696}.Release|Any CPU.ActiveCfg = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
