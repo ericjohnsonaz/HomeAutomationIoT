@@ -15,6 +15,8 @@ CREATE PROC dbo.uspDeviceLotValueInsert
     @experiment varchar(50) = NOTNULL,
 	@value      decimal(18,4) = NOTNULL,
 	@vccVoltage decimal(18,4) = NOTNULL,
+	@wifiSignalStrength decimal(6,2),
+	@softwareVersion varchar(15),
 	@response   varchar(max) = null
 	 
 AS
@@ -25,6 +27,8 @@ AS
 						  ,Experiment
 						  ,Value
 						  ,VccVoltage
+						  ,WiFiSignalStrength
+						  ,SoftwareVersion
 						  ,Response)
 				Select
 				 		 @sensorName
@@ -32,6 +36,8 @@ AS
 						,@experiment
 						,@value
 						,@vccVoltage
+						,@wiFiSignalStrength
+						,@softwareVersion
 						,@response
 
   return 777

@@ -14,18 +14,38 @@ AS
 
   DECLARE @SensorTable TABLE
 	(
+		Id int not null,
 		SensorName varchar(50) not null,
+		VccVoltage decimal(18,4) null,
+		WiFiSignalStrength decimal(6,2) null,
+		SoftwareVersion varchar(15) null,
 		LastUpdated datetime not null
 	)
 
-  Insert into @SensorTable (SensorName, LastUpdated)
-  select distinct SensorName, Max(Updated)
-    FROM tDeviceLogValue
-	group by SensorName
+  Insert into @SensorTable (Id
+                           ,SensorName
+                           ,VccVoltage
+                           ,WiFiSignalStrength
+                           ,SoftwareVersion
+				           ,LastUpdated)
+		  SELECT 
+		DISTINCT dlv.Id 
+		         ,dlv.SensorName
+				 ,VccVoltage
+				 ,WiFiSignalStrength
+				 ,SoftwareVersion
+				 ,Updated
+			FROM tDeviceLogValue dlv
+			JOIN (SELECT Max(id) as Id
+						,SensorName
+				   FROM  tDeviceLogValue
+				GROUP BY  SensorName) maxDlv
+			  ON dlv.id = maxDlv.id
+			 AND dlv.SensorName = maxDlv.SensorName
 
-
-  Insert tDeviceLogSensor(SensorName, LastUpdated)
-  Select s.SensorName, s.LastUpdated
+	
+  Insert tDeviceLogSensor(SensorName, LastUpdated, VccVoltage, WiFiSignalStrength, SoftwareVersion)
+  Select s.SensorName, s.LastUpdated, s.VccVoltage, s.WiFiSignalStrength, s.SoftwareVersion
     from @SensorTable s
 	LEFT
    OUTER
@@ -44,6 +64,9 @@ AS
    
   UPDATE dls
      SET dls.LastUpdated = s.LastUpdated
+	    ,dls.VccVoltage = s.VccVoltage
+		,dls.WiFiSignalStrength = s.WiFiSignalStrength
+		,dls.SoftwareVersion = s.SoftwareVersion
     FROM tDeviceLogSensor dls
 	JOIN @SensorTable s
 	  ON dls.SensorName = s.SensorName

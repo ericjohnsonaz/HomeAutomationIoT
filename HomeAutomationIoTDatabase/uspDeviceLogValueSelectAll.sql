@@ -17,7 +17,7 @@ AS
 	FROM tDeviceLogValue
   SET @beginId = @endId - 500;
 
-  SELECT top 500 *
+  SELECT top 1000 *
     FROM tDeviceLogValue
    WHERE Id between @beginId and @endId
   ORDER BY Updated desc
