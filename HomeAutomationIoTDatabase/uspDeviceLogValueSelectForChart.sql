@@ -16,7 +16,7 @@ AS
   DECLARE @endId   INT
   SELECT  @endId = MAX(Id)
 	FROM tDeviceLogValue
-  SET @beginId = @endId - 1000;
+  SET @beginId = @endId - 2000;
 
 
   SELECT  *
