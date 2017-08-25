@@ -13,7 +13,7 @@
     <link href="SiteStyles.css" rel="stylesheet" type="text/css" />
     <form id="form1" runat="server">
         <div>
-            <h1>GhostRider IoT Water Temperature Monitor</h1>
+            <h1>Eric's IoT Experiments</h1>
         </div>
         <div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
         <div>
@@ -22,7 +22,7 @@
             &nbsp;<select id="experimentFilter">
                   <option value="-1" disabled selected style="display:none;">Please select.....</option>
                   </select>
-            &nbsp;<input type='submit' value='Ludicrous Mode' onclick="StartLudicrousMode(); return 'false'"; />
+            &nbsp;<input type='submit' value='Ludicrous Mode' onclick="StartLudicrousMode(); return 'false';" />
 
             <h3>Active Clients</h3>
             <table id="tableActiveSensors" style="border: 2px; border-color: blue;">
@@ -66,7 +66,7 @@
 
     <script>
         var server = '<%=ConfigurationManager.AppSettings["LocalUrl"]%>';
-        var urlApiGetTempsForChart = "http://" + server + "HomeAutomationIoTAPI/api/TempGauge/GetTempsForChart";
+        var urlApiGetTempsForChart = "http://" + server + "HomeAutomationIoTAPI/api/TempGauge/GetTempsForChart3";
         var urlApiGetActiveClients = "http://" + server + "HomeAutomationIoTAPI/api/TempGauge/GetActiveClients";
         var urlApiGetTemps = "http://" + server + "HomeAutomationIoTAPI/api/TempGauge/GetTemps";
         var urlApiGetExperiments = "http://" + server + "HomeAutomationIoTAPI/api/TempGauge/GetExperiments";
@@ -77,6 +77,39 @@
         function DoStuff() {
             alert("Im not ready yet!!!");
         };
+
+        function Converter(input) {
+            var newdatacontainer = [];
+            for (var i = 0; i < input.length; i++) {
+                newdata = {};
+                newdata.name = '';
+                newdata.data = {};
+                var sss = input[i];
+                newdata.name = sss.name;
+
+                var internaldata = [];
+                for (x = 0; x < sss.data.length; x++) {
+                    var lineitem = [];
+                  //  debugger;
+                    var dateYear = sss.data[x].Date.substring(0, 4);
+                    var dateMonth = sss.data[x].Date.substring(5, 7);
+                    dateMonth--;
+                    var dateDay = sss.data[x].Date.substring(8, 10);
+                    var dateHour = sss.data[x].Date.substring(11, 13);
+                    var dateMinute = sss.data[x].Date.substring(14, 16);
+                    var dateSecond = sss.data[x].Date.substring(17, 19);
+                    var converted = Date.UTC(dateYear, dateMonth, dateDay, dateHour, dateMinute, dateSecond);
+
+                    lineitem.push(converted, sss.data[x].y);
+                    //lineitem.push(sss.data[x].Date, sss.data[x].y);
+                    internaldata.push(lineitem);
+                }
+                newdata.data = internaldata;
+                newdatacontainer.push(newdata);
+
+            }
+            return newdatacontainer;
+        }
 
         $(document).ready(function () {
             GetExperiments();
@@ -302,8 +335,8 @@
                 //        [["Date.UTC(2017, 8, 20, 14, 12, 30), 70.1100"], ["Date.UTC(2017, 8, 22, 14, 12, 30), 77.7900"], ["Date.UTC(2017, 8, 24, 14, 12, 30), 72.7900"], ["Date.UTC(2017, 8, 26, 14, 12, 30), 75.9000"]]
 
                 //    }];
-                debugger;
-                var xx = JSON.parse(data);
+                //debugger;
+                //var xx = JSON.parse(data);
 
                 Highcharts.chart('container', {
                     chart: {
@@ -319,22 +352,10 @@
                     },
                     xAxis: {
                         type: 'datetime',
-                        //dateTimeLabelFormats: {
-                        //    day: '%b/%e/%Y %H:%M:%S'
-                        //}
-                        //labels: {  put back in
-                        //    formatter: function () { //no time
-                        //        return Highcharts.dateFormat('%m/%d/%Y %H:%M:%S', this.value)
-                        //    },
-                        //    rotation: -45
-                        //},
-                        //labels: {
-                        //    rotation: -45,
-                        //    format: '{value:%Y-%b-%e}'
-
-                        //formatter: function () { didnt work
-                        //    return Highcharts.dateFormat('%m/%d/%Y %H:%M:%S', this.value);
-                        //}
+                        dateTimeLabelFormats: {
+                            day: '%a %m/%d/%y'
+                        },
+                        labels: { rotation: -45 }
                     },
                     yAxis: {
                         title: {
@@ -347,23 +368,8 @@
                     },
 
                     tooltip: {
-                        formatter: function () {
-                            var point = this.points[0];
-                            return '<b>' + point.series.name + '</b><br/>'
-                            //+
-                            //Highcharts.dateFormat('%A %B %e %Y', this.x) + ':<br/>' +
-                            //          Highcharts.dateFormat('%m/%d/%Y %H:%M:%S', this.x) + ':<br/>'
-                            //          +
-                            //         Highcharts.numberFormat(point.y, 2) + 'F';
-
-
-                            //  headerFormat: '<b>{series.name}</b><br>',
-                            //  pointFormat: '{point.x:%A, %b %e, %H:%M}: {point.y:.2f}F'
-
-                            //pointFormat: '{point.x:%Y-%b-%e}: {point.y:.2f}F'
-                            //pointFormat: '{point.x:%Y-%b-%e}: {point.y:.2f}F'
-                        },
-                        shared: true
+                        valueDecimals: 2,
+                        valueSuffix: 'F'
                     },
 
                     //plotOptions: { put back in
@@ -393,7 +399,8 @@
                     //}]
 
                     //series: data
-                    series: JSON.parse(data)
+                    series: Converter(JSON.parse(data)) 
+                    //series: Converter(data) //doesnt work
                     //series: serieseric6c
 
                     //series: [{

@@ -83,13 +83,14 @@ namespace HomeAutomationIoTAPI.Controllers
         }
         class Temp2
         {
-            public string Date { get; set; }
+            //public string Date { get; set; }
+            public DateTime Date { get; set; }
             public double y { get; set; }
         };
         class TempsMultiple
         {
             public string name { get; set; }
-            public List<Temp2> y { get; set; } = new List<Temp2>();
+            public List<Temp2> data { get; set; } = new List<Temp2>();
         };
 
         [HttpGet]
@@ -255,9 +256,10 @@ namespace HomeAutomationIoTAPI.Controllers
                 {
                     Temp2 temp2 = new Temp2();
                     DateTime lastUpdated = Convert.ToDateTime(rawDataLineItem.Field<DateTime>("Updated"));
-                    temp2.Date = "Date.UTC(" + lastUpdated.Year + "," + lastUpdated.Month + "," + lastUpdated.Day + "," + lastUpdated.Hour + "," + lastUpdated.Minute + "," + lastUpdated.Second + ")";
+                    //temp2.Date = "Date.UTC(" + lastUpdated.Year + "," + lastUpdated.Month + "," + lastUpdated.Day + "," + lastUpdated.Hour + "," + lastUpdated.Minute + "," + lastUpdated.Second + ")";
+                    temp2.Date = lastUpdated;
                     temp2.y = Convert.ToDouble(rawDataLineItem.Field<decimal>("Value"));
-                    tempMultiple.y.Add(temp2);
+                    tempMultiple.data.Add(temp2);
                 }
                 tempsMultiple.Add(tempMultiple);
             }
