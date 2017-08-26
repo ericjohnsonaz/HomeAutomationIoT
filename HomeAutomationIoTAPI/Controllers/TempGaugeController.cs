@@ -19,6 +19,8 @@ namespace HomeAutomationIoTAPI.Controllers
     {
         [HttpGet]
         [Route("TempGauge/{sensorName}/{location}/{experiment}/{temp:decimal}/{vccVoltage:decimal}/{wifiSignalStrength:decimal}/{softwareVersion}")]
+        //[Route("TempGauge/{sensorName}/{location}/{experiment}/{temp:decimal}/{updateSeconds: int}/{vccVoltage:decimal}/{wifiSignalStrength:decimal}/{softwareVersion}")]
+        //public HttpResponseMessage RecordTemp(string sensorName, string location, string experiment, decimal temp, int updateSeconds, decimal vccVoltage, decimal wifiSignalStrength, string softwareVersion)
         public HttpResponseMessage RecordTemp(string sensorName, string location, string experiment, decimal temp, decimal vccVoltage, decimal wifiSignalStrength, string softwareVersion)
         {
             DateTime start = DateTime.Now;
@@ -29,12 +31,13 @@ namespace HomeAutomationIoTAPI.Controllers
             { "location", location },
             { "experiment", experiment },
             { "value", temp },
+            { "updateSeconds", 300 },
             { "vccVoltage", vccVoltage },
             { "wifiSignalStrength", wifiSignalStrength },
             { "softwareVersion", softwareVersion }
 
         };
-            int newTimeValue = Connect.Execute("uspDeviceLotValueInsert", p);
+            int newTimeValue = Connect.Execute("uspDeviceLogValueInsert", p);
 
             HttpResponseMessage response;
             response = Request.CreateResponse(HttpStatusCode.OK, newTimeValue);
@@ -42,8 +45,8 @@ namespace HomeAutomationIoTAPI.Controllers
         }
 
         [HttpGet]
-        [Route("TempGauge/GetTemps")]
-        public HttpResponseMessage GetTemps()
+        [Route("TempGauge/GetTempsRaw")]
+        public HttpResponseMessage GetTempsRaw()
         {
             DataTable results = Connect.GetDataTable("uspDeviceLogValueSelectAll");
 

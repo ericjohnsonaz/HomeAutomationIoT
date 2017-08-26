@@ -16,6 +16,7 @@ AS
 	(
 		Id int not null,
 		SensorName varchar(50) not null,
+		UpdateSeconds int, 
 		VccVoltage decimal(18,4) null,
 		WiFiSignalStrength decimal(6,2) null,
 		SoftwareVersion varchar(15) null,
@@ -24,6 +25,7 @@ AS
 
   Insert into @SensorTable (Id
                            ,SensorName
+						   ,UpdateSeconds
                            ,VccVoltage
                            ,WiFiSignalStrength
                            ,SoftwareVersion
@@ -31,6 +33,7 @@ AS
 		  SELECT 
 		DISTINCT dlv.Id 
 		         ,dlv.SensorName
+				 ,dlv.UpdateSeconds
 				 ,VccVoltage
 				 ,WiFiSignalStrength
 				 ,SoftwareVersion
@@ -44,8 +47,8 @@ AS
 			 AND dlv.SensorName = maxDlv.SensorName
 
 	
-  Insert tDeviceLogSensor(SensorName, LastUpdated, VccVoltage, WiFiSignalStrength, SoftwareVersion)
-  Select s.SensorName, s.LastUpdated, s.VccVoltage, s.WiFiSignalStrength, s.SoftwareVersion
+  Insert tDeviceLogSensor(SensorName, UpdateSeconds, LastUpdated, VccVoltage, WiFiSignalStrength, SoftwareVersion)
+  Select s.SensorName, s.UpdateSeconds, s.LastUpdated, s.VccVoltage, s.WiFiSignalStrength, s.SoftwareVersion
     from @SensorTable s
 	LEFT
    OUTER
@@ -63,7 +66,8 @@ AS
    WHERE s.SensorName IS NULL
    
   UPDATE dls
-     SET dls.LastUpdated = s.LastUpdated
+     SET dls.UpdateSeconds = s.UpdateSeconds
+	    ,dls.LastUpdated = s.LastUpdated
 	    ,dls.VccVoltage = s.VccVoltage
 		,dls.WiFiSignalStrength = s.WiFiSignalStrength
 		,dls.SoftwareVersion = s.SoftwareVersion

@@ -1,19 +1,20 @@
 USE HomeAutomationIoT
 GO
 
-IF OBJECT_ID('dbo.uspDeviceLotValueInsert') IS NOT NULL
+IF OBJECT_ID('dbo.uspDeviceLogValueInsert') IS NOT NULL
 BEGIN
-    DROP PROC dbo.uspDeviceLotValueInsert
-    PRINT '<<< DROPPED PROC dbo.uspDeviceLotValueInsert >>>'
+    DROP PROC dbo.uspDeviceLogValueInsert
+    PRINT '<<< DROPPED PROC dbo.uspDeviceLogValueInsert >>>'
 END
 GO
 
-CREATE PROC dbo.uspDeviceLotValueInsert
+CREATE PROC dbo.uspDeviceLogValueInsert
 
 	@sensorName varchar(50) = NOTNULL,
 	@location   varchar(50) = NOTNULL,
     @experiment varchar(50) = NOTNULL,
 	@value      decimal(18,4) = NOTNULL,
+	@updateSeconds int,
 	@vccVoltage decimal(18,4) = NOTNULL,
 	@wifiSignalStrength decimal(6,2),
 	@softwareVersion varchar(15),
@@ -26,6 +27,7 @@ AS
 						  ,Location
 						  ,Experiment
 						  ,Value
+						  ,UpdateSeconds
 						  ,VccVoltage
 						  ,WiFiSignalStrength
 						  ,SoftwareVersion
@@ -35,6 +37,7 @@ AS
 						,@location
 						,@experiment
 						,@value
+						,@updateSeconds
 						,@vccVoltage
 						,@wiFiSignalStrength
 						,@softwareVersion
@@ -44,11 +47,11 @@ AS
 
 GO
 
-IF OBJECT_ID('dbo.uspDeviceLotValueInsert') IS NOT NULL
-    PRINT '<<< CREATED PROC dbo.uspDeviceLotValueInsert >>>'
+IF OBJECT_ID('dbo.uspDeviceLogValueInsert') IS NOT NULL
+    PRINT '<<< CREATED PROC dbo.uspDeviceLogValueInsert >>>'
 ELSE
-    PRINT '<<< FAILED CREATING PROC dbo.uspDeviceLotValueInsert >>>'
+    PRINT '<<< FAILED CREATING PROC dbo.uspDeviceLogValueInsert >>>'
 GO
 
-GRANT EXEC ON uspDeviceLotValueInsert TO HomeTempGauges
+GRANT EXEC ON uspDeviceLogValueInsert TO HomeTempGauges
 GO

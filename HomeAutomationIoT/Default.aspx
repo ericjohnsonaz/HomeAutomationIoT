@@ -56,6 +56,7 @@
                         <th>Temperature</th>
                         <th>VccVoltage</th>
                         <th>WiFi Signal Strength</th>
+                        <th>Software Version</th>
                         <th>Last Updated</th>
                     </tr>
                 </thead>
@@ -66,9 +67,9 @@
 
     <script>
         var server = '<%=ConfigurationManager.AppSettings["LocalUrl"]%>';
-        var urlApiGetTempsForChart = "http://" + server + "HomeAutomationIoTAPI/api/TempGauge/GetTempsForChart";
+        var urlApiGetTempsRawForChart = "http://" + server + "HomeAutomationIoTAPI/api/TempGauge/GetTempsForChart";
         var urlApiGetActiveClients = "http://" + server + "HomeAutomationIoTAPI/api/TempGauge/GetActiveClients";
-        var urlApiGetTemps = "http://" + server + "HomeAutomationIoTAPI/api/TempGauge/GetTemps";
+        var urlApiGetTempsRaw = "http://" + server + "HomeAutomationIoTAPI/api/TempGauge/GetTempsRaw";
         var urlApiGetExperiments = "http://" + server + "HomeAutomationIoTAPI/api/TempGauge/GetExperiments";
         var urlApiStartLudicrousMode = "http://" + server + "HomeAutomationIoTAPI/api/TempGauge/StartLudicrousMode/30";
         var refreshMilSeconds = 300000; // every ?
@@ -124,9 +125,7 @@
                 .change();
 
             RefreshAll();
-            //GetTempsForGrid();
-            //GetTempsForChart();
-            //LastUdated();
+
             return false;
         });
 
@@ -134,7 +133,7 @@
             GetExperiments();
             GetActiveSensors();
             GetTempsForChart();
-            GetTempsForGrid();
+            GetTempsForGridRaw();
             LastUdated();
             console.log("refresh milisec: " + refreshMilSeconds);
 
@@ -155,8 +154,8 @@
             $('#lastUpdated').text(moment(new Date()).format('MM/DD/YYYY h:mm:ss a'));
         };
 
-        function GetTempsForGrid() {
-            $.getJSON(urlApiGetTemps,
+        function GetTempsForGridRaw() {
+            $.getJSON(urlApiGetTempsRaw,
                 function (json) {
                     $('#table tbody tr').remove();
                     var tr;
@@ -169,6 +168,7 @@
                         tr.append("<td style='text-align: right'>" + json[i].Value + "</td>");
                         tr.append("<td style='text-align: right'>" + json[i].VccVoltage + "</td>");
                         tr.append("<td style='text-align: right'>" + json[i].WiFiSignalStrength + "</td>");
+                        tr.append("<td style='text-align: right'>" + json[i].SoftwareVersion + "</td>");
                         tr.append("<td>" + moment(json[i].Updated).format('MM/DD/YYYY h:mm:ss a') + "</td>");
                         $('#table').append(tr);
                     }
@@ -219,31 +219,31 @@
                     lastCheckinVariance += duration.minutes() + " Minutes ";
                 lastCheckinVariance += duration.seconds() + " Seconds ";
                 var bgColor = "";
-                if (duration.asMinutes() > 15)
+                if (duration.asSeconds() > activeClients[i].UpdateSeconds)
                     bgColor = "lightcoral";
                 else
                     bgColor = "lightgreen";
 
                 tr.append("<td style='background-color: " + bgColor + "'>" + lastCheckinVariance + "</td>");
-                //tr.append("<td>" + duration.days() + " Days " + duration.hours() + " Hours " + duration.minutes() + " Minutes " + duration.seconds() + " Seconds </td>");
                 tr.append("<td>" + activeClients[i].UpdateSeconds + "</td>");
-                var modeBgColor = "";
-                if (duration.asSeconds() > activeClients[i].UpdateSeconds)
-                    modeBgColor = "lightcoral";
-                else
-                    modeBgColor = "lightgreen";
-
-                tr.append("<td style='background-color: " + modeBgColor + "'>" + activeClients[i].Mode + "</td>");
-                tr.append("<td>" + activeClients[i].VccVoltage + "</td>");
-                tr.append("<td>" + activeClients[i].WiFiSignalStrength + "</td>");
-                tr.append("<td>" + activeClients[i].SoftwareVersion + "</td>");
+                //var modeBgColor = "";
+                //if (duration.asSeconds() > activeClients[i].UpdateSeconds)
+                //    modeBgColor = "lightcoral";
+                //else
+                //    modeBgColor = "lightgreen";
+                
+                //tr.append("<td style='background-color: " + modeBgColor + "'>" + activeClients[i].Mode + "</td>");
+                tr.append("<td>" + activeClients[i].Mode + "</td>");
+                tr.append("<td style='text-align: right'>" + activeClients[i].VccVoltage + "</td>");
+                tr.append("<td style='text-align: right'>" + activeClients[i].WiFiSignalStrength + "</td>");
+                tr.append("<td style='text-align: right'>" + activeClients[i].SoftwareVersion + "</td>");
                 tr.append("<td>  <input type='submit' value='Delete' onclick='DoStuff()'; /> </td>");
                 $('#tableActiveSensors').append(tr);
             }
         };
 
         function GetTempsForChart() {
-            $.getJSON(urlApiGetTempsForChart, function (data) {
+            $.getJSON(urlApiGetTempsRawForChart, function (data) {
 
             //    GetActiveSensors();
 
