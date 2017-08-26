@@ -22,7 +22,7 @@
             &nbsp;<select id="experimentFilter">
                   <option value="-1" disabled selected style="display:none;">Please select.....</option>
                   </select>
-            &nbsp;<input type='submit' value='Ludicrous Mode' onclick="StartLudicrousMode(); return 'false';" />
+            &nbsp;<input type='submit' value='Ludicrous Mode' onclick="return StartLudicrousMode();;" />
 
             <h3>Active Clients</h3>
             <table id="tableActiveSensors" style="border: 2px; border-color: blue;">
@@ -144,6 +144,7 @@
             $.getJSON(urlApiGetExperiments,
                 function (result) {
                     var options = $("#experimentFilter");
+                    options.empty();
                     $.each(result, function () {
                         options.append($("<option />").val(this.Experiment).text(this.Experiment));
                     });
@@ -182,6 +183,11 @@
             })
         };
 
+        function DeleteDeviceLogSensor(deviceLogSensorId) {
+            alert(deviceLogSensorId);
+            return false;
+        };
+
         function StartLudicrousMode() {
             $.getJSON(urlApiStartLudicrousMode, function (activeClients) {
                 debugger;
@@ -189,6 +195,7 @@
                 refreshMilSeconds = activeClients.Table1[0].RefreshSeconds * 1000
                 RefreshAll();
             });
+            return false;
         };
 
         function PopulateActiveClients(activeClients) {
@@ -237,15 +244,16 @@
                 tr.append("<td style='text-align: right'>" + activeClients[i].VccVoltage + "</td>");
                 tr.append("<td style='text-align: right'>" + activeClients[i].WiFiSignalStrength + "</td>");
                 tr.append("<td style='text-align: right'>" + activeClients[i].SoftwareVersion + "</td>");
-                tr.append("<td>  <input type='submit' value='Delete' onclick='DoStuff()'; /> </td>");
+                tr.append("<td>  <input type='submit' value='Delete' onclick='return DeleteDeviceLogSensor(" + activeClients[i].Id + ")'/> </td>");
+
+      //      &nbsp; <input type='submit' value='Ludicrous Mode' onclick="StartLudicrousMode(); return 'false';" />
+
                 $('#tableActiveSensors').append(tr);
             }
         };
 
         function GetTempsForChart() {
             $.getJSON(urlApiGetTempsRawForChart, function (data) {
-
-            //    GetActiveSensors();
 
                 Highcharts.chart('container', {
                     chart: {

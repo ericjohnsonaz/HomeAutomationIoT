@@ -79,6 +79,7 @@ AS
 	    
   SELECT *
     FROM tDeviceLogSensor
+   WHERE IsActive = 1
 
 GO
 

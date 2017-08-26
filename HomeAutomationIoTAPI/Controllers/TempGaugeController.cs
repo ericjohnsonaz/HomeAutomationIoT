@@ -310,5 +310,20 @@ namespace HomeAutomationIoTAPI.Controllers
             return response;
         }
 
+
+        [HttpGet]
+        [Route("TempGauge/DeleteDeviceLogSensor/{deviceLogSensorId}")]
+        public HttpResponseMessage DeleteDeviceLogSensor(int deviceLogSensorId)
+        {
+            var p = new Parameters()
+            {
+                { "deviceLogSensorId", deviceLogSensorId }
+            };
+            DataSet results = Connect.GetDataSet("uspDeviceLogSensorDelete", p);
+
+            HttpResponseMessage response;
+            response = Request.CreateResponse(HttpStatusCode.OK, results);
+            return response;
+        }
     }
 }
