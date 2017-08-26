@@ -28,7 +28,7 @@
             <table id="tableActiveSensors" style="border: 2px; border-color: blue;">
                 <thead>
                     <tr>
-                        <th>Id</th>
+                        <%--<th>Id</th>--%>
                         <th>Sensor Name</th>
                         <th>Last Check-in</th>
                         <th>Last Check-in Latency</th>
@@ -72,6 +72,7 @@
         var urlApiGetTempsRaw = "http://" + server + "HomeAutomationIoTAPI/api/TempGauge/GetTempsRaw";
         var urlApiGetExperiments = "http://" + server + "HomeAutomationIoTAPI/api/TempGauge/GetExperiments";
         var urlApiStartLudicrousMode = "http://" + server + "HomeAutomationIoTAPI/api/TempGauge/StartLudicrousMode/30";
+        var urlApiDeleteDeviceLogSensor = "http://" + server + "HomeAutomationIoTAPI/api/TempGauge/DeleteDeviceLogSensor";
         var refreshMilSeconds = 300000; // every ?
         //var refreshMilSeconds = 3000; // every 30 sec
 
@@ -184,7 +185,12 @@
         };
 
         function DeleteDeviceLogSensor(deviceLogSensorId) {
-            alert(deviceLogSensorId);
+            urlApiDeleteDeviceLogSensor
+            $.getJSON(urlApiDeleteDeviceLogSensor + '/' + deviceLogSensorId, function () {
+                GetActiveSensors();
+            });
+
+            //alert(deviceLogSensorId);
             return false;
         };
 
@@ -200,23 +206,24 @@
 
         function PopulateActiveClients(activeClients) {
             $('#tableActiveSensors tbody tr').remove();
+            console.log("PopulateActiveClients()");
             var tr;
             var currentDatetime = new moment();
 
             for (var i = 0; i < activeClients.length; i++) {
                 tr = $('<tr/>');
-                tr.append("<td>" + activeClients[i].Id + "</td>");
+                //tr.append("<td>" + activeClients[i].Id + "</td>");
                 tr.append("<td>" + activeClients[i].SensorName + "</td>");
                 tr.append("<td>" + moment(activeClients[i].LastUpdated).format('MM/DD/YYYY h:mm:ss a') + "</td>");
                 var diff = moment(currentDatetime).diff(moment(activeClients[i].LastUpdated));
                 var duration = moment.duration(diff);
 
-                console.log("duration: " + duration);
-                console.log("duration days: " + duration.days());
-                console.log("duration hours: " + duration.hours());
-                console.log("duration minutes: " + duration.minutes());
-                console.log("duration seconds: " + duration.seconds());
-                console.log("duration as minutes: " + duration.asMinutes());
+                //console.log("duration: " + duration);
+                //console.log("duration days: " + duration.days());
+                //console.log("duration hours: " + duration.hours());
+                //console.log("duration minutes: " + duration.minutes());
+                //console.log("duration seconds: " + duration.seconds());
+                //console.log("duration as minutes: " + duration.asMinutes());
                 var lastCheckinVariance = "";
                 if (duration.days() > 0)
                     lastCheckinVariance += duration.days() + " Days ";
