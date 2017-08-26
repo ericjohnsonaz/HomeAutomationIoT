@@ -165,9 +165,9 @@ void writeStatusLedNotConnected(String error, String senderFunction){
 
   int i = 0;
   do {
-    delay(delayMils);
+    delay(50);
     digitalWrite(D3, LOW);
-    delay(delayMils);
+    delay(50);
     digitalWrite(D3, HIGH);
     i++;
   } while (i < 2);
