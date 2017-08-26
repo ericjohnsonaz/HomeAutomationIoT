@@ -66,7 +66,7 @@
 
     <script>
         var server = '<%=ConfigurationManager.AppSettings["LocalUrl"]%>';
-        var urlApiGetTempsForChart = "http://" + server + "HomeAutomationIoTAPI/api/TempGauge/GetTempsForChart3";
+        var urlApiGetTempsForChart = "http://" + server + "HomeAutomationIoTAPI/api/TempGauge/GetTempsForChart";
         var urlApiGetActiveClients = "http://" + server + "HomeAutomationIoTAPI/api/TempGauge/GetActiveClients";
         var urlApiGetTemps = "http://" + server + "HomeAutomationIoTAPI/api/TempGauge/GetTemps";
         var urlApiGetExperiments = "http://" + server + "HomeAutomationIoTAPI/api/TempGauge/GetExperiments";
@@ -247,97 +247,6 @@
 
             //    GetActiveSensors();
 
-                //var serieseric3 =  
-                //    [{
-                //        "name": "Home_Downstairs_Hall", "data":
-                //        [["2017-08-19T12:25:28", 77.1100], ["2017-08-20T12:25:28", 79.7900], ["2017-08-21T12:25:28", 77.7900], ["2017-08-22T12:25:28", 77.9000]]
-                //    },
-                //    {
-                //        "name": "Home_Downstairs_xxx", "data":
-                //        [["2017-08-19T12:25:28", 70.1100], ["2017-08-20T12:25:28", 77.7900], ["2017-08-21T12:25:28", 72.7900], ["2017-08-22T12:25:28", 75.9000]]
-                //        }];
-
-                //var serieseric4 =
-                //    [{
-                //        "name": "Home_Downstairs_Hall", "data":
-                //        [["8/19/2017 12:30:11 PM", 77.1100], ["8/20/2017 12:30:11 PM", 79.7900], ["8/21/2017 12:30:11 PM", 77.7900], ["8/22/2017 12:30:11 PM", 77.9000]]
-                //    },
-                //    {
-                //        "name": "Home_Downstairs_xxx", "data":
-                //        [["8/19/2017 12:30:11 PM", 70.1100], ["8/20/2017 12:30:11 PM", 77.7900], ["8/21/2017 12:30:11 PM", 72.7900], ["8/22/2017 12:30:11 PM", 75.9000]]
-                //        }];
-
-                //var serieseric5 =
-                //    [{
-                //        "name": "Home_Downstairs_Hall", "data":
-                //        [[Date.UTC(2017, 8, 19, 14, 12, 30), 77.1100], [Date.UTC(2017, 8, 21, 14, 12, 30), 79.7900], [Date.UTC(2017, 8, 23, 14, 12, 30), 77.7900], [Date.UTC(2017, 8, 25, 14, 12, 30), 77.9000]]
-                //    },
-                //    {
-                //        "name": "Home_Downstairs_xxx", "data":
-                //        [[Date.UTC(2017, 8, 20, 14, 12, 30), 70.1100], [Date.UTC(2017, 8, 22, 14, 12, 30), 77.7900], [Date.UTC(2017, 8, 24, 14, 12, 30), 72.7900], [Date.UTC(2017, 8, 26, 14, 12, 30), 75.9000]]
-                //    }];
-
-                //var serieseric6 =
-                //    [{
-                //        "name": "Home_Downstairs_Hall", "data":
-                //        [["Date.UTC(2017, 8, 19, 14, 12, 30), 77.1100"], ["Date.UTC(2017, 8, 21, 14, 12, 30), 79.7900"], ["Date.UTC(2017, 8, 23, 14, 12, 30), 77.7900"], ["Date.UTC(2017, 8, 25, 14, 12, 30), 77.9000"]]
-                //    },
-                //    {
-                //        "name": "Home_Downstairs_xxx", "data":
-                //        [["Date.UTC(2017, 8, 20, 14, 12, 30), 70.1100"], ["Date.UTC(2017, 8, 22, 14, 12, 30), 77.7900"], ["Date.UTC(2017, 8, 24, 14, 12, 30), 72.7900"], ["Date.UTC(2017, 8, 26, 14, 12, 30), 75.9000"]]
-                //    }];
-
-                //var serieseric6b =
-                //    [{
-                //        "name": "Home_Downstairs_Hall", "data":
-                //        [["Date.UTC(2017, 8, 19, 14, 12, 30)", 77.1100], ["Date.UTC(2017, 8, 21, 14, 12, 30)", 79.7900], ["Date.UTC(2017, 8, 23, 14, 12, 30)", 77.7900], ["Date.UTC(2017, 8, 25, 14, 12, 30)", 77.9000]]
-                //    },
-                //    {
-                //        "name": "Home_Downstairs_xxx", "data":
-                //        [["Date.UTC(2017, 8, 20, 14, 12, 30)", 70.1100], ["Date.UTC(2017, 8, 22, 14, 12, 30)", 77.7900], ["Date.UTC(2017, 8, 24, 14, 12, 30)", 72.7900], ["Date.UTC(2017, 8, 26, 14, 12, 30)", 75.9000]]
-                //    }];
-
-
-                //var seriesbad =
-                //    [{
-                //        "data": [[{ "Date": "Date.UTC(2017,8,20,17,45,43),", "SensorTemp": 77.11 }]], "name": "Family_Room"
-                //    }];
-
-                //var serieseric7 =  //doesnt work
-                //    [{
-                //        "name": "Home_Downstairs_Hall", "data":
-                //        ["Date.UTC(2017, 8, 19, 14, 12, 30), 77.1100", "Date.UTC(2017, 8, 21, 14, 12, 30), 79.7900", "Date.UTC(2017, 8, 23, 14, 12, 30), 77.7900", "Date.UTC(2017, 8, 25, 14, 12, 30), 77.9000"]
-                //    },
-                //    {
-                //        "name": "Home_Downstairs_xxx", "data":
-                //        ["Date.UTC(2017, 8, 20, 14, 12, 30), 70.1100", "Date.UTC(2017, 8, 22, 14, 12, 30), 77.7900", "Date.UTC(2017, 8, 24, 14, 12, 30), 72.7900", "Date.UTC(2017, 8, 26, 14, 12, 30), 75.9000"]
-                //    }
-                //    ];
-
-                var serieseric8 =  //doesnt work
-                    [{
-                        "name": "Home_Downstairs_Hall", "data":
-                        ["{Date.UTC(2017, 8, 19, 14, 12, 30), 77.1100}", "{Date.UTC(2017, 8, 21, 14, 12, 30), 79.7900}", "{Date.UTC(2017, 8, 23, 14, 12, 30), 77.7900}", "{Date.UTC(2017, 8, 25, 14, 12, 30), 77.9000}"]
-                    },
-                    {
-                        "name": "Home_Downstairs_xxx", "data":
-                        ["{Date.UTC(2017, 8, 20, 14, 12, 30), 70.1100}", "{Date.UTC(2017, 8, 22, 14, 12, 30), 77.7900}", "{Date.UTC(2017, 8, 24, 14, 12, 30), 72.7900}", "{Date.UTC(2017, 8, 26, 14, 12, 30), 75.9000}"]
-                    }
-                    ];
-
-                //var serieseric9 =
-                //    [{
-                //        "name": "Family_Room",
-                //        "data": [["Date.UTC(2017,8,20,14,12,23),78.1200"], ["Date.UTC(2017,8,20,14,17,28),78.3500"], ["Date.UTC(2017,8,20,14,22,31),78.4600"], ["Date.UTC(2017,8,20,14,27,35),78.1200"], ["Date.UTC(2017,8,20,14,32,40),77.9000"], ["Date.UTC(2017,8,20,14,37,44),78.0100"], ["Date.UTC(2017,8,20,14,42,48),78.1200"], ["Date.UTC(2017,8,20,14,47,53),77.9000"], ["Date.UTC(2017,8,20,14,52,58),77.6800"], ["Date.UTC(2017,8,20,15,3,7),77.9000"], ["Date.UTC(2017,8,20,15,8,12),77.5600"]]
-                //    },
-                //    {
-                //        "name": "Home_Downstairs_xxx", "data":
-                //        [["Date.UTC(2017, 8, 20, 14, 12, 30), 70.1100"], ["Date.UTC(2017, 8, 22, 14, 12, 30), 77.7900"], ["Date.UTC(2017, 8, 24, 14, 12, 30), 72.7900"], ["Date.UTC(2017, 8, 26, 14, 12, 30), 75.9000"]]
-
-                //    }];
-                //debugger;
-                //var xx = JSON.parse(data);
-
                 Highcharts.chart('container', {
                     chart: {
                         zoomType: 'x',
@@ -389,33 +298,10 @@
                     //    }
                     //},
 
-                    //series: [{
-                    //    name: 'Temp',
-                    //    data: JSON.parse(data)
-                    //}]
-                    //series: [{
-                    //name: 'Temp',
-                    //data: [{ "name": "2017-08-19T12:24:04", "y": 77.68 }, { "name": "2017-08-19T12:25:28", "y": 78.8 }, { "name": "2017-08-19T12:29:12", "y": 77.34 }, { "name": "2017-08-19T12:30:36", "y": 78.35 }, { "name": "2017-08-19T12:34:20", "y": 77.22 }, { "name": "2017-08-19T12:35:44", "y": 78.46 }, { "name": "2017-08-19T12:39:28", "y": 77.56 }, { "name": "2017-08-19T12:40:52", "y": 78.8 }, { "name": "2017-08-19T12:44:36", "y": 77.56 }, { "name": "2017-08-19T12:45:59", "y": 78.57 }, { "name": "2017-08-19T12:49:44", "y": 77.11 }, { "name": "2017-08-19T12:51:07", "y": 78.12 }]
-                    //}]
-
                     //series: data
                     series: Converter(JSON.parse(data)) 
                     //series: Converter(data) //doesnt work
                     //series: serieseric6c
-
-                    //series: [{
-                    //    "name": "temp1", data: [
-                    //        ["8/19/2017", 78.8],
-                    //        ["8/20/2017", 79.8],
-                    //        ["8/21/2017", 80.8]
-                    //    ]
-                    //}, {
-                    //    "name": "temp2", data: [
-                    //        ["2017-08-19T12:25:28", 78.8],
-                    //        ["2017-08-19T12:25:28", 76.8],
-                    //        ["2017-08-19T12:25:28", 70.8]
-                    //    ]
-                    //    }]
 
                 });
             });

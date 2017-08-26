@@ -18,7 +18,6 @@ namespace HomeAutomationIoTAPI.Controllers
     public class TempGaugeController : ApiController
     {
         [HttpGet]
-        //[Route("TempGauge/{sensorName}/{location}/{experiment}/{temp:decimal}/{vccVoltage:decimal}")]
         [Route("TempGauge/{sensorName}/{location}/{experiment}/{temp:decimal}/{vccVoltage:decimal}/{wifiSignalStrength:decimal}/{softwareVersion}")]
         public HttpResponseMessage RecordTemp(string sensorName, string location, string experiment, decimal temp, decimal vccVoltage, decimal wifiSignalStrength, string softwareVersion)
         {
@@ -93,107 +92,107 @@ namespace HomeAutomationIoTAPI.Controllers
             public List<Temp2> data { get; set; } = new List<Temp2>();
         };
 
-        [HttpGet]
-        [Route("TempGauge/GetTempsForChart")]
-        public HttpResponseMessage GetTempsForChart()
-        {
-            DataTable results = Connect.GetDataTable("uspDeviceLogValueSelectForChart");
-            var resultsArray = new List<SeriesTemps>();
+        //[HttpGet]
+        //[Route("TempGauge/GetTempsForChart")]
+        //public HttpResponseMessage GetTempsForChart()
+        //{
+        //    DataTable results = Connect.GetDataTable("uspDeviceLogValueSelectForChart");
+        //    var resultsArray = new List<SeriesTemps>();
 
-            var sensors = results.AsEnumerable().
-                            Select(row => new { Name = row.Field<string>("SensorName") })
-                            .Distinct();
+        //    var sensors = results.AsEnumerable().
+        //                    Select(row => new { Name = row.Field<string>("SensorName") })
+        //                    .Distinct();
 
-            //Dictionary<string, IEnumerable<string>> list = new Dictionary<string, IEnumerable<string>>();
-            List<Tuple<string, double>>[] tempDataItemList = new List<Tuple<string, double>>[1000];
-            SeriesTempsTuple seriesTempTuple = new SeriesTempsTuple();
+        //    //Dictionary<string, IEnumerable<string>> list = new Dictionary<string, IEnumerable<string>>();
+        //    List<Tuple<string, double>>[] tempDataItemList = new List<Tuple<string, double>>[1000];
+        //    SeriesTempsTuple seriesTempTuple = new SeriesTempsTuple();
 
-            foreach (var sensor in sensors)
-            {
-                // SeriesTemps seriesTemps = new SeriesTemps();
-                // int index = 0;
+        //    foreach (var sensor in sensors)
+        //    {
+        //        // SeriesTemps seriesTemps = new SeriesTemps();
+        //        // int index = 0;
 
-                var rawDataForSensor = from rawData in results.AsEnumerable()
-                                       where rawData.Field<string>("SensorName") == sensor.Name
-                                       select rawData;
-                SeriesTemps seriesTemp = new SeriesTemps();
-                seriesTemp.name = sensor.Name;
+        //        var rawDataForSensor = from rawData in results.AsEnumerable()
+        //                               where rawData.Field<string>("SensorName") == sensor.Name
+        //                               select rawData;
+        //        SeriesTemps seriesTemp = new SeriesTemps();
+        //        seriesTemp.name = sensor.Name;
 
-                seriesTempTuple.name = sensor.Name;
+        //        seriesTempTuple.name = sensor.Name;
 
-                Tuple<string, double>[] dataItem = new Tuple<string, double>[1000];
-                int tupleIndex = 0;
-                //List<string> dataList = new List<string>();
-                foreach (var rawDataLineItem in rawDataForSensor)
-                {
-                    //seriesTemps.data.Add("" + "[" + rawDataLineItem.Field<DateTime>("Updated").ToString() + "" + ", " + 
-                    //    rawDataLineItem.Field<decimal>("Value").ToString() + "],");
+        //        Tuple<string, double>[] dataItem = new Tuple<string, double>[1000];
+        //        int tupleIndex = 0;
+        //        //List<string> dataList = new List<string>();
+        //        foreach (var rawDataLineItem in rawDataForSensor)
+        //        {
+        //            //seriesTemps.data.Add("" + "[" + rawDataLineItem.Field<DateTime>("Updated").ToString() + "" + ", " + 
+        //            //    rawDataLineItem.Field<decimal>("Value").ToString() + "],");
 
-                    //seriesTemps.data.Add(rawDataLineItem.Field<DateTime>("Updated").ToString() + ", " +
-                    //    rawDataLineItem.Field<decimal>("Value").ToString());
+        //            //seriesTemps.data.Add(rawDataLineItem.Field<DateTime>("Updated").ToString() + ", " +
+        //            //    rawDataLineItem.Field<decimal>("Value").ToString());
 
-                    // [[Date.UTC(2017,8,19,14,12,30), 77.1100],
-                    DateTime lastUpdated = Convert.ToDateTime(rawDataLineItem.Field<DateTime>("Updated"));
-                    //dataList.Add("[Date.UTC(" + lastUpdated.Year + "," + lastUpdated.Month + "," + lastUpdated.Day + "," + lastUpdated.Hour + "," + lastUpdated.Minute + "," + lastUpdated.Second +")" + "," +
-                    //    rawDataLineItem.Field<decimal>("Value").ToString() + "]");
+        //            // [[Date.UTC(2017,8,19,14,12,30), 77.1100],
+        //            DateTime lastUpdated = Convert.ToDateTime(rawDataLineItem.Field<DateTime>("Updated"));
+        //            //dataList.Add("[Date.UTC(" + lastUpdated.Year + "," + lastUpdated.Month + "," + lastUpdated.Day + "," + lastUpdated.Hour + "," + lastUpdated.Minute + "," + lastUpdated.Second +")" + "," +
+        //            //    rawDataLineItem.Field<decimal>("Value").ToString() + "]");
 
-                    //dataList.Add("Date.UTC(" + lastUpdated.Year + "," + lastUpdated.Month + "," + lastUpdated.Day + "," + lastUpdated.Hour + "," + lastUpdated.Minute + "," + lastUpdated.Second + ")" + "," +
-                    //            rawDataLineItem.Field<decimal>("Value").ToString());
+        //            //dataList.Add("Date.UTC(" + lastUpdated.Year + "," + lastUpdated.Month + "," + lastUpdated.Day + "," + lastUpdated.Hour + "," + lastUpdated.Minute + "," + lastUpdated.Second + ")" + "," +
+        //            //            rawDataLineItem.Field<decimal>("Value").ToString());
 
-                    Temp temp = new Temp();
-                    temp.Date = "Date.UTC(" + lastUpdated.Year + "," + lastUpdated.Month + "," + lastUpdated.Day + "," + lastUpdated.Hour + "," + lastUpdated.Minute + "," + lastUpdated.Second + ")" + ",";
-                    temp.SensorTemp = Convert.ToDouble(rawDataLineItem.Field<decimal>("Value"));
-
-
-                    //seriesTemp.data.Add(new List<string>(new string[] {"Date.UTC(" + lastUpdated.Year + "," + lastUpdated.Month + "," + lastUpdated.Day + "," + lastUpdated.Hour + "," + lastUpdated.Minute + "," + lastUpdated.Second + ")" + "," +
-                    //           rawDataLineItem.Field<decimal>("Value").ToString() }));
-                    // index ++;
-                    List<Temp> tempInternal = new List<Temp>();
-                    tempInternal.Add(temp);
-
-                    //List<List<Temp>> temp2Internal = new List<List<Temp>>();
-                    //temp2Internal.Add(tempInternal);
-
-                    seriesTemp.data.Add(tempInternal);
-                    //seriesTemp.data.Add(new List<Temp> ({ Temp.Date = temp.Date, SensorTemp = temp.SensorTemp }));
-
-                    string date = "Date.UTC(" + lastUpdated.Year + "," + lastUpdated.Month + "," + lastUpdated.Day + "," + lastUpdated.Hour + "," + lastUpdated.Minute + "," + lastUpdated.Second + ")";
-                    double tempDegrees = Convert.ToDouble(rawDataLineItem.Field<decimal>("Value"));
-                    Tuple<string, double> dataItemInserted = new Tuple<string, double>(date, tempDegrees);
-
-                    dataItem[tupleIndex] = dataItemInserted;
-                    tupleIndex++;
-
-                    //dataItem.ad
-                    //seriesTempTuple.data.Add()
-
-                }
-
-                seriesTempTuple.data.Add(dataItem);
-
-                //  seriesTemps.data = dataList.ToArray();
-                resultsArray.Add(seriesTemp);
-            }
-
-            HttpResponseMessage response;
-            //response = Request.CreateResponse(HttpStatusCode.OK, JsonConvert.SerializeObject(list));
-            //JArray jarray = new JArray();
-
-            //foreach(var item in list[0].data)
-            //{
-            //    jarray.Add(item);
-            //}
+        //            Temp temp = new Temp();
+        //            temp.Date = "Date.UTC(" + lastUpdated.Year + "," + lastUpdated.Month + "," + lastUpdated.Day + "," + lastUpdated.Hour + "," + lastUpdated.Minute + "," + lastUpdated.Second + ")" + ",";
+        //            temp.SensorTemp = Convert.ToDouble(rawDataLineItem.Field<decimal>("Value"));
 
 
-            //response = Request.CreateResponse(HttpStatusCode.OK, JsonConvert.SerializeObject(list));
+        //            //seriesTemp.data.Add(new List<string>(new string[] {"Date.UTC(" + lastUpdated.Year + "," + lastUpdated.Month + "," + lastUpdated.Day + "," + lastUpdated.Hour + "," + lastUpdated.Minute + "," + lastUpdated.Second + ")" + "," +
+        //            //           rawDataLineItem.Field<decimal>("Value").ToString() }));
+        //            // index ++;
+        //            List<Temp> tempInternal = new List<Temp>();
+        //            tempInternal.Add(temp);
+
+        //            //List<List<Temp>> temp2Internal = new List<List<Temp>>();
+        //            //temp2Internal.Add(tempInternal);
+
+        //            seriesTemp.data.Add(tempInternal);
+        //            //seriesTemp.data.Add(new List<Temp> ({ Temp.Date = temp.Date, SensorTemp = temp.SensorTemp }));
+
+        //            string date = "Date.UTC(" + lastUpdated.Year + "," + lastUpdated.Month + "," + lastUpdated.Day + "," + lastUpdated.Hour + "," + lastUpdated.Minute + "," + lastUpdated.Second + ")";
+        //            double tempDegrees = Convert.ToDouble(rawDataLineItem.Field<decimal>("Value"));
+        //            Tuple<string, double> dataItemInserted = new Tuple<string, double>(date, tempDegrees);
+
+        //            dataItem[tupleIndex] = dataItemInserted;
+        //            tupleIndex++;
+
+        //            //dataItem.ad
+        //            //seriesTempTuple.data.Add()
+
+        //        }
+
+        //        seriesTempTuple.data.Add(dataItem);
+
+        //        //  seriesTemps.data = dataList.ToArray();
+        //        resultsArray.Add(seriesTemp);
+        //    }
+
+        //    HttpResponseMessage response;
+        //    //response = Request.CreateResponse(HttpStatusCode.OK, JsonConvert.SerializeObject(list));
+        //    //JArray jarray = new JArray();
+
+        //    //foreach(var item in list[0].data)
+        //    //{
+        //    //    jarray.Add(item);
+        //    //}
 
 
-            //response = Request.CreateResponse(HttpStatusCode.OK, JsonConvert.SerializeObject(jarray)); //same
-            //response = Request.CreateResponse(HttpStatusCode.OK, JsonConvert.SerializeObject(resultsArray));  //same
-            response = Request.CreateResponse(HttpStatusCode.OK, JsonConvert.SerializeObject(seriesTempTuple));  //same
+        //    //response = Request.CreateResponse(HttpStatusCode.OK, JsonConvert.SerializeObject(list));
 
-            return response;
-        }
+
+        //    //response = Request.CreateResponse(HttpStatusCode.OK, JsonConvert.SerializeObject(jarray)); //same
+        //    //response = Request.CreateResponse(HttpStatusCode.OK, JsonConvert.SerializeObject(resultsArray));  //same
+        //    response = Request.CreateResponse(HttpStatusCode.OK, JsonConvert.SerializeObject(seriesTempTuple));  //same
+
+        //    return response;
+        //}
 
         //[HttpGet]
         //[Route("TempGauge/GetTempsForChart")]
@@ -214,28 +213,28 @@ namespace HomeAutomationIoTAPI.Controllers
         //    return response;
         //}
 
+        //[HttpGet]
+        //[Route("TempGauge/GetTempsForChart2")]
+        //public HttpResponseMessage GetTempsForChart2()
+        //{
+
+        //    DataTable results = Connect.GetDataTable("uspDeviceLogValueSelectForChart");
+        //    var resultsArray = new List<Temps>();
+
+        //    foreach (DataRow row in results.Rows)
+        //    {
+        //        //resultsArray.Add(new Temps { name = row["Updated"].ToString(), y = Convert.ToDouble(row["Value"]) });
+        //        resultsArray.Add(new Temps { name = Convert.ToDateTime(row["Updated"].ToString()), y = Convert.ToDouble(row["Value"]) });
+        //    }
+
+        //    HttpResponseMessage response;
+        //    response = Request.CreateResponse(HttpStatusCode.OK, JsonConvert.SerializeObject(resultsArray));
+        //    return response;
+        //}
+
         [HttpGet]
-        [Route("TempGauge/GetTempsForChart2")]
-        public HttpResponseMessage GetTempsForChart2()
-        {
-
-            DataTable results = Connect.GetDataTable("uspDeviceLogValueSelectForChart");
-            var resultsArray = new List<Temps>();
-
-            foreach (DataRow row in results.Rows)
-            {
-                //resultsArray.Add(new Temps { name = row["Updated"].ToString(), y = Convert.ToDouble(row["Value"]) });
-                resultsArray.Add(new Temps { name = Convert.ToDateTime(row["Updated"].ToString()), y = Convert.ToDouble(row["Value"]) });
-            }
-
-            HttpResponseMessage response;
-            response = Request.CreateResponse(HttpStatusCode.OK, JsonConvert.SerializeObject(resultsArray));
-            return response;
-        }
-
-        [HttpGet]
-        [Route("TempGauge/GetTempsForChart3")]
-        public HttpResponseMessage GetTempsForChart3()
+        [Route("TempGauge/GetTempsForChart")]
+        public HttpResponseMessage GetTempsForChart()
         {
             DataTable results = Connect.GetDataTable("uspDeviceLogValueSelectForChart");
             var tempsMultiple = new List<TempsMultiple>();
