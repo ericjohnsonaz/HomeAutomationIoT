@@ -17,6 +17,7 @@ CREATE PROC dbo.uspDeviceLogValueInsert
 	@updateSeconds int,
 	@vccVoltage decimal(18,4) = NOTNULL,
 	@wifiSignalStrength decimal(6,2),
+	@freeHeap      int = null,
 	@softwareVersion varchar(15),
 	@response   varchar(max) = null
 	 
@@ -31,6 +32,7 @@ AS
 						  ,VccVoltage
 						  ,WiFiSignalStrength
 						  ,SoftwareVersion
+						  ,FreeHeap
 						  ,Response)
 				Select
 				 		 @sensorName
@@ -41,6 +43,7 @@ AS
 						,@vccVoltage
 						,@wiFiSignalStrength
 						,@softwareVersion
+						,@freeHeap
 						,@response
 
   return 777

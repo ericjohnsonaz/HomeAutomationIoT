@@ -44,6 +44,33 @@ namespace HomeAutomationIoTAPI.Controllers
             return response;
         }
 
+        //v1.0.6
+        [HttpGet]  
+        [Route("TempGauge/{sensorName}/{location}/{experiment}/{temp:decimal}/{vccVoltage:decimal}/{wifiSignalStrength:decimal}/{freeHeap:int}/{softwareVersion}")]
+        public HttpResponseMessage RecordTemp(string sensorName, string location, string experiment, decimal temp, decimal vccVoltage, decimal wifiSignalStrength, int freeHeap, string softwareVersion)
+        {
+            DateTime start = DateTime.Now;
+
+            var p = new Parameters()
+        {
+            { "sensorName", sensorName },
+            { "location", location },
+            { "experiment", experiment },
+            { "value", temp },
+            { "updateSeconds", 300 },
+            { "vccVoltage", vccVoltage },
+            { "wifiSignalStrength", wifiSignalStrength },
+            { "freeHeap", freeHeap },
+            { "softwareVersion", softwareVersion }
+
+        };
+            int newTimeValue = Connect.Execute("uspDeviceLogValueInsert", p);
+
+            HttpResponseMessage response;
+            response = Request.CreateResponse(HttpStatusCode.OK, newTimeValue);
+            return response;
+        }
+
         [HttpGet]
         [Route("TempGauge/GetTempsRaw")]
         public HttpResponseMessage GetTempsRaw()

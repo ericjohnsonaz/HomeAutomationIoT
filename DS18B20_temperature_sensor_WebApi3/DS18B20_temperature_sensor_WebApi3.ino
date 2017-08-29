@@ -13,17 +13,19 @@
 #define EIOT_PORT        80
 #define REPORT_INTERVAL 300 // 5 minutes
 //#define REPORT_INTERVAL 60 // 1 minute
-static const String SENSOR_NAME = "Upstairs_Hall";
+static const String SENSOR_NAME = "Outside";
 //url += "Family_Room";
 //url += "Downstairs_Hall";
 //url += "Upstairs_Hall";
+//url += "Outside";
 
-static const String LOCATION = "Home_Upstairs_Hall";
+static const String LOCATION = "Home_Outside";
 //url += "Home_Family_Room";
 //url += "Home_Downstairs_Hall";
 //url += "Home_Upstairs_Hall";
+//url += "Home_Outside";
 
-static const String SOFTWARE_VERSION = "1.0.5";
+static const String SOFTWARE_VERSION = "1.0.6";
 
 ADC_MODE(ADC_VCC);
 
@@ -46,6 +48,7 @@ DallasTemperature DS18B20(&oneWire);
 
 void setup() {
   Serial.begin(115200);
+  Serial.println("");
   Serial.println("");
   Serial.print("Software Version: ");
   Serial.println(SOFTWARE_VERSION);
@@ -81,7 +84,7 @@ void setup() {
 void loop() {
   float tempC;
   float tempF;
-
+  
   do {
     DS18B20.requestTemperatures();
     tempC = DS18B20.getTempCByIndex(0);
@@ -251,6 +254,9 @@ void sendTeperature(float temp)
   Serial.print("Vcc voltage is: ");
   Serial.println(vcc);
 
+  Serial.print("Memory alloc Free Heap: ");
+  Serial.println(ESP.getFreeHeap());
+  
   String url = "";
   url += "http://server1/HomeAutomationIoTAPI/api/TempGauge/";   // Home1/Family_Room/Multi-sensor%20Temp%20Variation/";  latest
   // url += "http://server1/HomeAutomationIoTAPI/api/TempGauge/Home1/Family_Room/Multi-sensor%20Temp%20Variation/";
@@ -266,6 +272,8 @@ void sendTeperature(float temp)
   url += vcc;
   url += "/";
   url += WiFi.RSSI();
+  url += "/";
+  url += ESP.getFreeHeap();
   url += "/";
   url += SOFTWARE_VERSION;
   url += "/";
@@ -301,4 +309,5 @@ void sendTeperature(float temp)
   client.flush();
   client.stop();
 }
+
 

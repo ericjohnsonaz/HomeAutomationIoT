@@ -76,6 +76,7 @@ AS
 	  ON dls.SensorName = s.SensorName
 
 
+
 	    
   SELECT *
     FROM tDeviceLogSensor

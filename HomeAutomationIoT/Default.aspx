@@ -57,6 +57,7 @@
                         <th>VccVoltage</th>
                         <th>WiFi Signal Strength</th>
                         <th>Software Version</th>
+                        <th>Free Heap</th>
                         <th>Last Updated</th>
                     </tr>
                 </thead>
@@ -81,36 +82,40 @@
         };
 
         function Converter(input) {
-            var newdatacontainer = [];
+            var allSensors = [];
             for (var i = 0; i < input.length; i++) {
-                newdata = {};
-                newdata.name = '';
-                newdata.data = {};
-                var sss = input[i];
-                newdata.name = sss.name;
+                internalData = {};
+                internalData.name = '';
+                internalData.data = {};
+                var lineItemObj = input[i];
+                internalData.name = lineItemObj.name;
 
                 var internaldata = [];
-                for (x = 0; x < sss.data.length; x++) {
+                for (x = 0; x < lineItemObj.data.length; x++) {
                     var lineitem = [];
-                  //  debugger;
-                    var dateYear = sss.data[x].Date.substring(0, 4);
-                    var dateMonth = sss.data[x].Date.substring(5, 7);
+                    var dateYear = lineItemObj.data[x].Date.substring(0, 4);
+                    var dateMonth = lineItemObj.data[x].Date.substring(5, 7);
                     dateMonth--;
-                    var dateDay = sss.data[x].Date.substring(8, 10);
-                    var dateHour = sss.data[x].Date.substring(11, 13);
-                    var dateMinute = sss.data[x].Date.substring(14, 16);
-                    var dateSecond = sss.data[x].Date.substring(17, 19);
+                    var dateDay = lineItemObj.data[x].Date.substring(8, 10);
+                    var dateHour = lineItemObj.data[x].Date.substring(11, 13);
+                    var dateMinute = lineItemObj.data[x].Date.substring(14, 16);
+                    var dateSecond = lineItemObj.data[x].Date.substring(17, 19);
                     var converted = Date.UTC(dateYear, dateMonth, dateDay, dateHour, dateMinute, dateSecond);
+                    debugger;
+                  //  (moment(new Date()).format('MM/DD/YYYY h:mm:ss a'));
 
-                    lineitem.push(converted, sss.data[x].y);
-                    //lineitem.push(sss.data[x].Date, sss.data[x].y);
+                   
+                    var xx = (moment(lineItemObj.data[x].Date).format('MM/DD/YYYY h:mm:ss a'));
+                    var yyy = moment.utc(lineItemObj.data[x].Date);
+
+                    lineitem.push(converted, lineItemObj.data[x].y);
                     internaldata.push(lineitem);
                 }
-                newdata.data = internaldata;
-                newdatacontainer.push(newdata);
+                internalData.data = internaldata;
+                allSensors.push(internalData);
 
             }
-            return newdatacontainer;
+            return allSensors;
         }
 
         $(document).ready(function () {
@@ -171,6 +176,7 @@
                         tr.append("<td style='text-align: right'>" + json[i].VccVoltage + "</td>");
                         tr.append("<td style='text-align: right'>" + json[i].WiFiSignalStrength + "</td>");
                         tr.append("<td style='text-align: right'>" + json[i].SoftwareVersion + "</td>");
+                        tr.append("<td style='text-align: right'>" + json[i].FreeHeap + "</td>");
                         tr.append("<td>" + moment(json[i].Updated).format('MM/DD/YYYY h:mm:ss a') + "</td>");
                         $('#table').append(tr);
                     }
