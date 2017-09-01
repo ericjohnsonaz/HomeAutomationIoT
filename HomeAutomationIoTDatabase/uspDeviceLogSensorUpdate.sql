@@ -16,6 +16,7 @@ AS
   Update tDeviceLogSensor 
      set UpdateSeconds = @seconds,
 	     Mode = 'Ludicrous'
+   WHERE IsActive = 1
 
 
 	EXEC uspDeviceLogValueGetActiveClients

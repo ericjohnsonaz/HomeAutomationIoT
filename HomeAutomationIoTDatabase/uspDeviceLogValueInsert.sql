@@ -37,7 +37,8 @@ AS
 				Select
 				 		 @sensorName
 						,@location
-						,@experiment
+						--,@experiment
+						,'Home A/C Zone Comparison'
 						,@value
 						,@updateSeconds
 						,@vccVoltage
