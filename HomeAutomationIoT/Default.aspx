@@ -8,6 +8,8 @@
     <script type="text/javascript" src="Scripts/jquery-3.2.1.min.js"></script>
     <script type="text/javascript" src="Scripts/highcharts.js"></script>
     <script type="text/javascript" src="Scripts/moment.min.js"></script>
+    <script type="text/javascript" src="Scripts/jquery-ui-1.12.1.min.js"></script>
+    <link href="Styles/SliderStyle.css" rel="stylesheet" />
 </head>
 <body>
     <link href="SiteStyles.css" rel="stylesheet" type="text/css" />
@@ -16,12 +18,23 @@
             <h1>Eric's IoT Experiments</h1>
         </div>
         <div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+        <div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+        <div id="time-range">
+            <p>
+                Time Range: <span class="slider-time"></span>- <span class="slider-time2"></span>
+            </p>
+            <div class="sliders_step1">
+                <div id="slider-range"></div>
+            </div>
+        </div>
         <div>
-            Data Last Updated: <label id="lastUpdated"></label>
+            Data Last Updated:
+            <label id="lastUpdated"></label>
             &nbsp;Experiment Filter
             &nbsp;<select id="experimentFilter">
-                  <option value="-1" disabled selected style="display:none;">Please select.....</option>
-                  </select>
+                <option value="-1" disabled selected style="display: none;">Please select.....</option>
+            </select>
+
             &nbsp;<input type='submit' value='Ludicrous Mode' onclick="return StartLudicrousMode();;" />
 
             <h3>Active Clients</h3>
@@ -34,13 +47,13 @@
                         <th>Last Check-in Latency</th>
                         <th>Update Seconds</th>
                         <th>Mode</th>
-                        <th>Vcc Voltage</th>                                                     
+                        <th>Vcc Voltage</th>
                         <th>WiFi Signal Strength</th>
                         <th>Software Version</th>
                         <th>Action</th>
                     </tr>
                 </thead>
-               <tbody></tbody>
+                <tbody></tbody>
             </table>
         </div>
         <br />
@@ -101,10 +114,10 @@
                     var dateMinute = lineItemObj.data[x].Date.substring(14, 16);
                     var dateSecond = lineItemObj.data[x].Date.substring(17, 19);
                     var converted = Date.UTC(dateYear, dateMonth, dateDay, dateHour, dateMinute, dateSecond);
-                    debugger;
-                  //  (moment(new Date()).format('MM/DD/YYYY h:mm:ss a'));
+                    //   debugger;
+                    //  (moment(new Date()).format('MM/DD/YYYY h:mm:ss a'));
 
-                   
+
                     var xx = (moment(lineItemObj.data[x].Date).format('MM/DD/YYYY h:mm:ss a'));
                     var yyy = moment.utc(lineItemObj.data[x].Date);
 
@@ -117,6 +130,43 @@
             }
             return allSensors;
         }
+
+        var dt_from = "2014/11/01 00:34:44";
+        var dt_to = "2014/11/24 16:37:43";
+
+        $('.slider-time').html(dt_from);
+        $('.slider-time2').html(dt_to);
+        var min_val = Date.parse(dt_from) / 1000;
+        var max_val = Date.parse(dt_to) / 1000;
+
+        function zeroPad(num, places) {
+            var zero = places - num.toString().length + 1;
+            return Array(+(zero > 0 && zero)).join("0") + num;
+        }
+        function formatDT(__dt) {
+            var year = __dt.getFullYear();
+            var month = zeroPad(__dt.getMonth() + 1, 2);
+            var date = zeroPad(__dt.getDate(), 2);
+            var hours = zeroPad(__dt.getHours(), 2);
+            var minutes = zeroPad(__dt.getMinutes(), 2);
+            var seconds = zeroPad(__dt.getSeconds(), 2);
+            return year + '-' + month + '-' + date + ' ' + hours + ':' + minutes + ':' + seconds;
+        };
+
+        $("#slider-range").slider({
+            range: true,
+            min: min_val,
+            max: max_val,
+            step: 10,
+            values: [min_val, max_val],
+            slide: function (e, ui) {
+                var dt_cur_from = new Date(ui.values[0] * 1000); //.format("yyyy-mm-dd hh:ii:ss");
+                $('.slider-time').html(formatDT(dt_cur_from));
+
+                var dt_cur_to = new Date(ui.values[1] * 1000); //.format("yyyy-mm-dd hh:ii:ss");                
+                $('.slider-time2').html(formatDT(dt_cur_to));
+            }
+        });
 
         $(document).ready(function () {
             GetExperiments();
@@ -202,7 +252,7 @@
 
         function StartLudicrousMode() {
             $.getJSON(urlApiStartLudicrousMode, function (activeClients) {
-                debugger;
+                //  debugger;
                 PopulateActiveClients(activeClients.Table);
                 refreshMilSeconds = activeClients.Table1[0].RefreshSeconds * 1000
                 RefreshAll();
@@ -251,7 +301,7 @@
                 //    modeBgColor = "lightcoral";
                 //else
                 //    modeBgColor = "lightgreen";
-                
+
                 //tr.append("<td style='background-color: " + modeBgColor + "'>" + activeClients[i].Mode + "</td>");
                 tr.append("<td>" + activeClients[i].Mode + "</td>");
                 tr.append("<td style='text-align: right'>" + activeClients[i].VccVoltage + "</td>");
@@ -259,7 +309,7 @@
                 tr.append("<td style='text-align: right'>" + activeClients[i].SoftwareVersion + "</td>");
                 tr.append("<td>  <input type='submit' value='Delete' onclick='return DeleteDeviceLogSensor(" + activeClients[i].Id + ")'/> </td>");
 
-      //      &nbsp; <input type='submit' value='Ludicrous Mode' onclick="StartLudicrousMode(); return 'false';" />
+                //      &nbsp; <input type='submit' value='Ludicrous Mode' onclick="StartLudicrousMode(); return 'false';" />
 
                 $('#tableActiveSensors').append(tr);
             }
@@ -320,7 +370,7 @@
                     //},
 
                     //series: data
-                    series: Converter(JSON.parse(data)) 
+                    series: Converter(JSON.parse(data))
                     //series: Converter(data) //doesnt work
                     //series: serieseric6c
 
