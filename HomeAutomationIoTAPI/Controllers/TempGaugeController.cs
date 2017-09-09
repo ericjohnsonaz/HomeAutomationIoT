@@ -158,6 +158,43 @@ namespace HomeAutomationIoTAPI.Controllers
         }
 
         [HttpGet]
+        //[Route("TempGauge/GetTempsForChart/V211/{startIsoDate:datetime}/{endIsoDate:datetime}")]
+        [Route("TempGauge/GetTempsForChart/V211")]
+        public HttpResponseMessage GetTempsForChartV211(DateTime startIsoDate, DateTime endIsoDate)
+        {
+            DataTable results = Connect.GetDataTable("uspDeviceLogValueSelectForChart");
+            var tempsMultiple = new List<TempsMultiple>();
+
+            var sensors = results.AsEnumerable().
+                            Select(row => new { Name = row.Field<string>("SensorName") })
+                            .Distinct();
+
+            foreach (var sensor in sensors)
+            {
+                TempsMultiple tempMultiple = new TempsMultiple();
+                var rawDataForSensor = from rawData in results.AsEnumerable()
+                                       where rawData.Field<string>("SensorName") == sensor.Name
+                                       select rawData;
+                tempMultiple.name = sensor.Name;
+
+                foreach (var rawDataLineItem in rawDataForSensor)
+                {
+                    Temp2 temp2 = new Temp2();
+                    DateTime lastUpdated = Convert.ToDateTime(rawDataLineItem.Field<DateTime>("Updated"));
+                    //temp2.Date = "Date.UTC(" + lastUpdated.Year + "," + lastUpdated.Month + "," + lastUpdated.Day + "," + lastUpdated.Hour + "," + lastUpdated.Minute + "," + lastUpdated.Second + ")";
+                    temp2.Date = lastUpdated;
+                    temp2.y = Convert.ToDouble(rawDataLineItem.Field<decimal>("Value"));
+                    tempMultiple.data.Add(temp2);
+                }
+                tempsMultiple.Add(tempMultiple);
+            }
+
+            HttpResponseMessage response;
+            response = Request.CreateResponse(HttpStatusCode.OK, JsonConvert.SerializeObject(tempsMultiple));
+            return response;
+        }
+
+        [HttpGet]
         [Route("TempGauge/GetActiveClients")]
         public HttpResponseMessage GetActiveClients()
         {

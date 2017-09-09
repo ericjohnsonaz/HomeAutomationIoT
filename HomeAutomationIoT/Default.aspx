@@ -81,13 +81,19 @@
     <script>
         var server = '<%=ConfigurationManager.AppSettings["LocalUrl"]%>';
         var urlApiGetTempsRawForChart = "http://" + server + "HomeAutomationIoTAPI/api/TempGauge/GetTempsForChart";
+        var urlApiGetTempsRawForChartV211 = "http://" + server + "HomeAutomationIoTAPI/api/TempGauge/GetTempsForChart/V211";
+
         var urlApiGetActiveClients = "http://" + server + "HomeAutomationIoTAPI/api/TempGauge/GetActiveClients";
         var urlApiGetTempsRaw = "http://" + server + "HomeAutomationIoTAPI/api/TempGauge/GetTempsRaw";
         var urlApiGetExperiments = "http://" + server + "HomeAutomationIoTAPI/api/TempGauge/GetExperiments";
         var urlApiStartLudicrousMode = "http://" + server + "HomeAutomationIoTAPI/api/TempGauge/StartLudicrousMode/30";
         var urlApiDeleteDeviceLogSensor = "http://" + server + "HomeAutomationIoTAPI/api/TempGauge/DeleteDeviceLogSensor";
-        var refreshMilSeconds = 300000; // every ?
-        //var refreshMilSeconds = 3000; // every 30 sec
+
+      //  var refreshMilSeconds = 300000; // every ?
+        var refreshMilSeconds = 3000; // every 30 sec
+
+        var startTicks;
+        var endTicks;
 
         function DoStuff() {
             alert("Im not ready yet!!!");
@@ -117,8 +123,8 @@
                     //  (moment(new Date()).format('MM/DD/YYYY h:mm:ss a'));
 
 
-                    var xx = (moment(lineItemObj.data[x].Date).format('MM/DD/YYYY h:mm:ss a'));
-                    var yyy = moment.utc(lineItemObj.data[x].Date);
+                    //     var xx = (moment(lineItemObj.data[x].Date).format('MM/DD/YYYY h:mm:ss a'));
+                    //   var yyy = moment.utc(lineItemObj.data[x].Date);
 
                     lineitem.push(converted, lineItemObj.data[x].y);
                     internaldata.push(lineitem);
@@ -130,6 +136,23 @@
             return allSensors;
         }
 
+        $(document).ready(function () {
+            GetExperiments();
+
+            $("#experimentFilter")
+                .change(function () {
+                    var str = "";
+                    if ($("#experimentFilter option:selected").val() != -1) {
+                        alert($("#experimentFilter option:selected").text());
+                    }
+                })
+                .change();
+
+            RefreshAll();
+
+            return false;
+        });
+
         var dt_from = "2014/11/01 00:34:44";
         var dt_to = "2014/11/24 16:37:43";
 
@@ -137,11 +160,15 @@
         $('.slider-time2').html(dt_to);
         var min_val = Date.parse(dt_from) / 1000;
         var max_val = Date.parse(dt_to) / 1000;
+        debugger;
+        startTicks = new Date(min_val * 1000);
+        endTicks = new Date(max_val * 1000);
 
         function zeroPad(num, places) {
             var zero = places - num.toString().length + 1;
             return Array(+(zero > 0 && zero)).join("0") + num;
         }
+
         function formatDT(__dt) {
             var year = __dt.getFullYear();
             var month = zeroPad(__dt.getMonth() + 1, 2);
@@ -164,25 +191,39 @@
 
                 var dt_cur_to = new Date(ui.values[1] * 1000); //.format("yyyy-mm-dd hh:ii:ss");                
                 $('.slider-time2').html(formatDT(dt_cur_to));
+
+                startTicks = ui.values[0] * 1000;
+                endTicks = ui.values[1] * 1000;
+
+            //    debugger;
+                var endDate = moment(new Date()).format('MM/DD/YYYY h:mm:ss a');
+                var startDate = moment(new Date(startTicks)).format('MM/DD/YYYY h:mm:ss a');
+                var sdf = moment(new Date(startTicks)).format();
+
             }
         });
 
-        $(document).ready(function () {
-            GetExperiments();
+        $("#slider-range").on("slidechange", function (event, ui) {
+              //    debugger;
+           // startTicks = ui.values[0];
+           // endTicks = ui.values[1];
+           //debugger;
+          //  alert(new Date(startTicks * 1000).format("yyyy-mm-dd hh:ii:ss"));
+            //alert(moment(new Date(startTicks * 1000).format("yyyy-mm-dd hh:ii:ss"));
+            //var endDate = moment(new Date()).format('MM/DD/YYYY h:mm:ss a');
+            //var startDate = moment(new Date(startTicks * 1000)).format('MM/DD/YYYY h:mm:ss a');
+            //var startDate = moment(new Date(startTicks * 100)).format('MM/DD/YYYY h:mm:ss a');
 
-            $("#experimentFilter")
-                .change(function () {
-                    var str = "";
-                    if ($("#experimentFilter option:selected").val() != -1) {
-                        alert($("#experimentFilter option:selected").text());
-                    }
-                })
-                .change();
 
-            RefreshAll();
+           // alert(moment(new Date(startTicks * 1000).format('MM/DD/YYYY h:mm:ss a')));
 
-            return false;
-        });
+          //  alert(moment.utc(new Date(startTicks * 1000).valueOf));
+
+
+            //  alert(moment.utc(startTicks / 10000).format('MM/DD/YYYY h:mm:ss a'));
+        }
+        );
+
 
         function RefreshAll() {
             GetExperiments();
@@ -315,7 +356,14 @@
         };
 
         function GetTempsForChart() {
-            $.getJSON(urlApiGetTempsRawForChart, function (data) {
+            var startIsoDate = moment(new Date(startTicks)).format();
+            var endIsoDate = moment(new Date(endTicks)).format();
+
+            var url = urlApiGetTempsRawForChartV211 + "?startIsoDate=" + startIsoDate + "&endIsoDate=" + endIsoDate;
+            debugger;
+
+            $.getJSON(url, function (data) {
+            //$.getJSON(urlApiGetTempsRawForChart, function (data) {
 
                 Highcharts.chart('container', {
                     chart: {

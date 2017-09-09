@@ -13,9 +13,6 @@ namespace HomeAutomationIoT
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            //DataTable items = JsonConvert.DeserializeObject<DataTable>(jsonObject);
-            //uiTemps.DataSource = items;
-            //uiTemps.DataBind(); 
         }
     }
 }
