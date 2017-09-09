@@ -18,14 +18,13 @@
             <h1>Eric's IoT Experiments</h1>
         </div>
         <div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
-        <div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+
         <div id="time-range">
-            <p>
-                Time Range: <span class="slider-time"></span>- <span class="slider-time2"></span>
-            </p>
+            Time Range: <span class="slider-time"></span>- <span class="slider-time2"></span>
             <div class="sliders_step1">
                 <div id="slider-range"></div>
             </div>
+            <br />
         </div>
         <div>
             Data Last Updated:
