@@ -20,7 +20,7 @@
         <div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
 
         <div id="time-range">
-            Time Range: <span class="slider-time"></span>- <span class="slider-time2"></span>
+            Time Range: <span class="slider-time"></span>&nbsp; To &nbsp; <span class="slider-time2"></span>
             <div class="sliders_step1">
                 <div id="slider-range"></div>
             </div>
@@ -90,7 +90,7 @@
         var urlApiDeleteDeviceLogSensor = "http://" + server + "HomeAutomationIoTAPI/api/TempGauge/DeleteDeviceLogSensor";
 
       //  var refreshMilSeconds = 300000; // every ?
-        var refreshMilSeconds = 3000; // every 30 sec
+        var refreshMilSeconds = 300000; // every 30 sec
 
         var startTicks;
         var endTicks;
@@ -153,16 +153,18 @@
             return false;
         });
 
-        var dt_from = "2014/11/01 00:34:44";
-        var dt_to = "2014/11/24 16:37:43";
+        var dt_from = "2017/07/01 00:00:00";
+        var dt_to = Date();
+        //var dt_to = "2014/11/24 16:37:43";
 
-        $('.slider-time').html(dt_from);
-        $('.slider-time2').html(dt_to);
+        $('.slider-time').html(moment(dt_from).format('MM/DD/YYYY h:mm:ss a'));
+        $('.slider-time2').html(moment(dt_to).format('MM/DD/YYYY h:mm:ss a'));
         var min_val = Date.parse(dt_from) / 1000;
         var max_val = Date.parse(dt_to) / 1000;
-        debugger;
+      //  debugger;
         startTicks = new Date(min_val * 1000);
         endTicks = new Date(max_val * 1000);
+        console.log("doc init startticks=" + startTicks + " endticks=" + endTicks);
 
         function zeroPad(num, places) {
             var zero = places - num.toString().length + 1;
@@ -186,25 +188,38 @@
             step: 10,
             values: [min_val, max_val],
             slide: function (e, ui) {
-                var dt_cur_from = new Date(ui.values[0] * 1000); //.format("yyyy-mm-dd hh:ii:ss");
-                $('.slider-time').html(formatDT(dt_cur_from));
+                var dt_cur_from = new Date(ui.values[0] * 1000);
+                var dt_cur_to = new Date(ui.values[1] * 1000);
+                $('.slider-time').html(moment(dt_cur_from).format('MM/DD/YYYY h:mm:ss a'));
+                $('.slider-time2').html(moment(dt_cur_to).format('MM/DD/YYYY h:mm:ss a'));
 
-                var dt_cur_to = new Date(ui.values[1] * 1000); //.format("yyyy-mm-dd hh:ii:ss");                
-                $('.slider-time2').html(formatDT(dt_cur_to));
+                //    startTicks = ui.values[0] * 1000;
+                //    endTicks = ui.values[1] * 1000;
 
-                startTicks = ui.values[0] * 1000;
-                endTicks = ui.values[1] * 1000;
-
-            //    debugger;
-                var endDate = moment(new Date()).format('MM/DD/YYYY h:mm:ss a');
-                var startDate = moment(new Date(startTicks)).format('MM/DD/YYYY h:mm:ss a');
-                var sdf = moment(new Date(startTicks)).format();
-
+                ////    debugger;
+                //    var endDate = moment(new Date()).format('MM/DD/YYYY h:mm:ss a');
+                //    var startDate = moment(new Date(startTicks)).format('MM/DD/YYYY h:mm:ss a');
+                //    console.log("slider-range min_val=" + min_val + " max_val=" + max_val);
             }
         });
 
         $("#slider-range").on("slidechange", function (event, ui) {
-              //    debugger;
+            //    debugger;
+            var dt_cur_from = new Date(ui.values[0] * 1000);
+            var dt_cur_to = new Date(ui.values[1] * 1000); 
+            startTicks = dt_cur_from;
+            endTicks = dt_cur_to;
+            console.log("slider change dt_cur_from=" + formatDT(dt_cur_from) + " dt_cur_to=" + formatDT(dt_cur_to));
+
+            var endDate = moment(new Date(endTicks)).format('MM/DD/YYYY h:mm:ss a');
+            var startDate = moment(new Date(startTicks)).format('MM/DD/YYYY h:mm:ss a');
+
+            $('.slider-time').html(moment(dt_cur_from).format('MM/DD/YYYY h:mm:ss a'));
+            $('.slider-time2').html(moment(dt_cur_to).format('MM/DD/YYYY h:mm:ss a'));
+
+            console.log("slider change startDate=" + startDate + " endDate=" + endDate);
+            GetTempsForChart();
+
            // startTicks = ui.values[0];
            // endTicks = ui.values[1];
            //debugger;
@@ -360,7 +375,7 @@
             var endIsoDate = moment(new Date(endTicks)).format();
 
             var url = urlApiGetTempsRawForChartV211 + "?startIsoDate=" + startIsoDate + "&endIsoDate=" + endIsoDate;
-            debugger;
+         //   debugger;
 
             $.getJSON(url, function (data) {
             //$.getJSON(urlApiGetTempsRawForChart, function (data) {

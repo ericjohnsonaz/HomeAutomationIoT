@@ -162,7 +162,10 @@ namespace HomeAutomationIoTAPI.Controllers
         [Route("TempGauge/GetTempsForChart/V211")]
         public HttpResponseMessage GetTempsForChartV211(DateTime startIsoDate, DateTime endIsoDate)
         {
-            DataTable results = Connect.GetDataTable("uspDeviceLogValueSelectForChart");
+            Parameters parms = new Parameters();
+            parms.Add("startIsoDate", startIsoDate);
+            parms.Add("endIsoDate", endIsoDate);
+            DataTable results = Connect.GetDataTable("uspDeviceLogValueSelectForChart", parms);
             var tempsMultiple = new List<TempsMultiple>();
 
             var sensors = results.AsEnumerable().
