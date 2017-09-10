@@ -192,14 +192,6 @@
                 var dt_cur_to = new Date(ui.values[1] * 1000);
                 $('.slider-time').html(moment(dt_cur_from).format('MM/DD/YYYY h:mm:ss a'));
                 $('.slider-time2').html(moment(dt_cur_to).format('MM/DD/YYYY h:mm:ss a'));
-
-                //    startTicks = ui.values[0] * 1000;
-                //    endTicks = ui.values[1] * 1000;
-
-                ////    debugger;
-                //    var endDate = moment(new Date()).format('MM/DD/YYYY h:mm:ss a');
-                //    var startDate = moment(new Date(startTicks)).format('MM/DD/YYYY h:mm:ss a');
-                //    console.log("slider-range min_val=" + min_val + " max_val=" + max_val);
             }
         });
 
@@ -211,13 +203,11 @@
             endTicks = dt_cur_to;
             console.log("slider change dt_cur_from=" + formatDT(dt_cur_from) + " dt_cur_to=" + formatDT(dt_cur_to));
 
-            var endDate = moment(new Date(endTicks)).format('MM/DD/YYYY h:mm:ss a');
-            var startDate = moment(new Date(startTicks)).format('MM/DD/YYYY h:mm:ss a');
-
             $('.slider-time').html(moment(dt_cur_from).format('MM/DD/YYYY h:mm:ss a'));
             $('.slider-time2').html(moment(dt_cur_to).format('MM/DD/YYYY h:mm:ss a'));
 
-            console.log("slider change startDate=" + startDate + " endDate=" + endDate);
+            console.log("slider change startDate=" + moment(new Date(startTicks)).format('MM/DD/YYYY h:mm:ss a')
+                + " endDate=" + moment(new Date(endTicks)).format('MM/DD/YYYY h:mm:ss a'));
             GetTempsForChart();
 
            // startTicks = ui.values[0];
@@ -267,6 +257,7 @@
         };
 
         function GetTempsForGridRaw() {
+            console.log("GetTempsForGridRaw");
             $.getJSON(urlApiGetTempsRaw,
                 function (json) {
                     $('#table tbody tr').remove();
@@ -371,6 +362,8 @@
         };
 
         function GetTempsForChart() {
+            console.log("getTempsForChart");
+
             var startIsoDate = moment(new Date(startTicks)).format();
             var endIsoDate = moment(new Date(endTicks)).format();
 
