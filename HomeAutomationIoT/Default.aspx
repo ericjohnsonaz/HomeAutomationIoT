@@ -88,8 +88,6 @@
         var urlApiGetExperiments = "http://" + server + "HomeAutomationIoTAPI/api/TempGauge/GetExperiments";
         var urlApiStartLudicrousMode = "http://" + server + "HomeAutomationIoTAPI/api/TempGauge/StartLudicrousMode/30";
         var urlApiDeleteDeviceLogSensor = "http://" + server + "HomeAutomationIoTAPI/api/TempGauge/DeleteDeviceLogSensor";
-
-      //  var refreshMilSeconds = 300000; // every ?
         var refreshMilSeconds = 300000; // every 30 sec
 
         var startTicks;
@@ -155,7 +153,6 @@
         debugger;
         var dt_from = "2017/07/01 00:00:00";
         var dt_from_slider = new Date();
-        //var dt_from_slider = dt_from_slider.setDate(dt_from_slider.getDate() - 2);
         var dt_from_slider = moment().subtract(3, "days").format("YYYY/MM/DD h:mm:ss");
         var dt_to = Date();
 
@@ -165,7 +162,7 @@
         var min_val = Date.parse(dt_from) / 1000;
         var min_slider_val = Date.parse(dt_from_slider) / 1000;
         var max_val = Date.parse(dt_to) / 1000;
-      //  debugger;
+        //  debugger;
         startTicks = new Date(min_slider_val * 1000);
         endTicks = new Date(max_val * 1000);
         console.log("doc init startticks=" + startTicks + " endticks=" + endTicks);
@@ -202,7 +199,7 @@
         $("#slider-range").on("slidechange", function (event, ui) {
             //    debugger;
             var dt_cur_from = new Date(ui.values[0] * 1000);
-            var dt_cur_to = new Date(ui.values[1] * 1000); 
+            var dt_cur_to = new Date(ui.values[1] * 1000);
             startTicks = dt_cur_from;
             endTicks = dt_cur_to;
             console.log("slider change dt_cur_from=" + formatDT(dt_cur_from) + " dt_cur_to=" + formatDT(dt_cur_to));
@@ -213,24 +210,7 @@
             console.log("slider change startDate=" + moment(new Date(startTicks)).format('MM/DD/YYYY h:mm:ss a')
                 + " endDate=" + moment(new Date(endTicks)).format('MM/DD/YYYY h:mm:ss a'));
             GetTempsForChart();
-
-           // startTicks = ui.values[0];
-           // endTicks = ui.values[1];
-           //debugger;
-          //  alert(new Date(startTicks * 1000).format("yyyy-mm-dd hh:ii:ss"));
-            //alert(moment(new Date(startTicks * 1000).format("yyyy-mm-dd hh:ii:ss"));
-            //var endDate = moment(new Date()).format('MM/DD/YYYY h:mm:ss a');
-            //var startDate = moment(new Date(startTicks * 1000)).format('MM/DD/YYYY h:mm:ss a');
-            //var startDate = moment(new Date(startTicks * 100)).format('MM/DD/YYYY h:mm:ss a');
-
-
-           // alert(moment(new Date(startTicks * 1000).format('MM/DD/YYYY h:mm:ss a')));
-
-          //  alert(moment.utc(new Date(startTicks * 1000).valueOf));
-
-
-            //  alert(moment.utc(startTicks / 10000).format('MM/DD/YYYY h:mm:ss a'));
-        }
+          }
         );
 
 
@@ -296,13 +276,11 @@
                 GetActiveSensors();
             });
 
-            //alert(deviceLogSensorId);
             return false;
         };
 
         function StartLudicrousMode() {
             $.getJSON(urlApiStartLudicrousMode, function (activeClients) {
-                //  debugger;
                 PopulateActiveClients(activeClients.Table);
                 refreshMilSeconds = activeClients.Table1[0].RefreshSeconds * 1000
                 RefreshAll();
@@ -372,11 +350,9 @@
             var endIsoDate = moment(new Date(endTicks)).format();
 
             var url = urlApiGetTempsRawForChartV211 + "?startIsoDate=" + startIsoDate + "&endIsoDate=" + endIsoDate;
-         //   debugger;
+            //   debugger;
 
             $.getJSON(url, function (data) {
-            //$.getJSON(urlApiGetTempsRawForChart, function (data) {
-
                 Highcharts.chart('container', {
                     chart: {
                         zoomType: 'x',
@@ -411,28 +387,7 @@
                         valueSuffix: 'F'
                     },
 
-                    //plotOptions: { put back in
-                    //    spline: {
-                    //        marker: {
-                    //            enabled: true
-                    //        }
-                    //    },
-                    //    marker: {
-                    //        radius: 1
-                    //    },
-                    //    lineWidth: 1,
-                    //    states: {
-                    //        hover: {
-                    //            lineWidth: 1
-                    //        }
-                    //    }
-                    //},
-
-                    //series: data
                     series: Converter(JSON.parse(data))
-                    //series: Converter(data) //doesnt work
-                    //series: serieseric6c
-
                 });
             });
         };
