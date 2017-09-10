@@ -9,24 +9,19 @@ END
 GO
 
 CREATE PROC dbo.uspDeviceLogValueSelectForChart
- 
+	@startDate datetime
+   ,@endDate   datetime
 AS
 
- -- DECLARE @beginId INT
- -- DECLARE @endId   INT
- -- SELECT  @endId = MAX(Id)
-	--FROM tDeviceLogValuer
- -- SET @beginId = @endId - 2000;
-
-  DECLARE @beginLastUpdated datetime
-  DECLARE @endLastUpdated   datetime
+  --DECLARE @beginLastUpdated datetime
+  --DECLARE @endLastUpdated   datetime
   
-  SET  @endLastUpdated = GetDate();
-  SET  @beginLastUpdated = DateAdd(day, -2, @endLastUpdated) 
+  --SET  @endLastUpdated = GetDate();
+  --SET  @beginLastUpdated = DateAdd(day, -2, @endLastUpdated) 
 
   SELECT *
     FROM tDeviceLogValue
-   WHERE Updated between @beginLastUpdated and @endLastUpdated
+   WHERE Updated between @startDate and @endDate
   ORDER BY Updated desc
 
 

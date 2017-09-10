@@ -20,7 +20,7 @@
         <div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
 
         <div id="time-range">
-            Time Range: <span class="slider-time"></span>- <span class="slider-time2"></span>
+            Time Range: <span class="slider-time"></span>&nbsp; To &nbsp;<span class="slider-time2"></span>
             <div class="sliders_step1">
                 <div id="slider-range"></div>
             </div>
@@ -79,6 +79,7 @@
     </form>
 
     <script>
+        console.log("Starting main js");
         var server = '<%=ConfigurationManager.AppSettings["LocalUrl"]%>';
         var urlApiGetTempsRawForChart = "http://" + server + "HomeAutomationIoTAPI/api/TempGauge/GetTempsForChart";
         var urlApiGetTempsRawForChartV211 = "http://" + server + "HomeAutomationIoTAPI/api/TempGauge/GetTempsForChart/V211";
@@ -89,8 +90,7 @@
         var urlApiStartLudicrousMode = "http://" + server + "HomeAutomationIoTAPI/api/TempGauge/StartLudicrousMode/30";
         var urlApiDeleteDeviceLogSensor = "http://" + server + "HomeAutomationIoTAPI/api/TempGauge/DeleteDeviceLogSensor";
 
-      //  var refreshMilSeconds = 300000; // every ?
-        var refreshMilSeconds = 3000; // every 30 sec
+        var refreshMilSeconds = 300000; // every 5 minutes
 
         var startTicks;
         var endTicks;
@@ -136,6 +136,50 @@
             return allSensors;
         }
 
+        var dt_from = new Date();  //"2014/11/01 00:34:44";
+        dt_from.setDate(dt_from.getDate() - 2);
+        var dt_to = new Date();  //"2014/11/24 16:37:43";
+        startTicks = new Date(dt_from);
+        endTicks = new Date(dt_to);
+        console.log("init slider startTicks=" + startTicks + " endTicks=" + endTicks);
+
+        //$('.slider-time').html(dt_from);
+        //$('.slider-time2').html(dt_to);
+        var min_val = Date.parse(dt_from) / 1000;
+        var max_val = Date.parse(dt_to) / 1000;
+        console.log("init slider datetimes");
+        //  debugger;
+        var dt_cur_from = new Date(dt_from); 
+        $('.slider-time').html(moment(new Date(dt_cur_from)).format('MM/DD/YYYY h:mm:ss a'));
+        
+        var dt_cur_to = new Date(dt_to);                
+        $('.slider-time2').html(moment(new Date(dt_to)).format('MM/DD/YYYY h:mm:ss a'));
+
+        //startTicks = ui.values[0];
+        //endTicks = ui.values[1];
+
+        //    debugger;
+        //works but does nothing
+        //var endDate = moment(new Date()).format('MM/DD/YYYY h:mm:ss a');
+        //var startDate = moment(new Date(startTicks)).format('MM/DD/YYYY h:mm:ss a');
+        //console.log("init slider start=" + startDate + " enddate=" + endDate);
+
+
+        function zeroPad(num, places) {
+            var zero = places - num.toString().length + 1;
+            return Array(+(zero > 0 && zero)).join("0") + num;
+        }
+
+        function formatDT(__dt) {
+            var year = __dt.getFullYear();
+            var month = zeroPad(__dt.getMonth() + 1, 2);
+            var date = zeroPad(__dt.getDate(), 2);
+            var hours = zeroPad(__dt.getHours(), 2);
+            var minutes = zeroPad(__dt.getMinutes(), 2);
+            var seconds = zeroPad(__dt.getSeconds(), 2);
+            return year + '-' + month + '-' + date + ' ' + hours + ':' + minutes + ':' + seconds;
+        };
+
         $(document).ready(function () {
             GetExperiments();
 
@@ -153,31 +197,6 @@
             return false;
         });
 
-        var dt_from = "2014/11/01 00:34:44";
-        var dt_to = "2014/11/24 16:37:43";
-
-        $('.slider-time').html(dt_from);
-        $('.slider-time2').html(dt_to);
-        var min_val = Date.parse(dt_from) / 1000;
-        var max_val = Date.parse(dt_to) / 1000;
-        debugger;
-        startTicks = new Date(min_val * 1000);
-        endTicks = new Date(max_val * 1000);
-
-        function zeroPad(num, places) {
-            var zero = places - num.toString().length + 1;
-            return Array(+(zero > 0 && zero)).join("0") + num;
-        }
-
-        function formatDT(__dt) {
-            var year = __dt.getFullYear();
-            var month = zeroPad(__dt.getMonth() + 1, 2);
-            var date = zeroPad(__dt.getDate(), 2);
-            var hours = zeroPad(__dt.getHours(), 2);
-            var minutes = zeroPad(__dt.getMinutes(), 2);
-            var seconds = zeroPad(__dt.getSeconds(), 2);
-            return year + '-' + month + '-' + date + ' ' + hours + ':' + minutes + ':' + seconds;
-        };
 
         $("#slider-range").slider({
             range: true,
@@ -186,52 +205,69 @@
             step: 10,
             values: [min_val, max_val],
             slide: function (e, ui) {
-                var dt_cur_from = new Date(ui.values[0] * 1000); //.format("yyyy-mm-dd hh:ii:ss");
-                $('.slider-time').html(formatDT(dt_cur_from));
+                //var dt_cur_from = new Date(ui.values[0] * 1000); //.format("yyyy-mm-dd hh:ii:ss");
+                //$('.slider-time').html(formatDT(dt_cur_from));
 
-                var dt_cur_to = new Date(ui.values[1] * 1000); //.format("yyyy-mm-dd hh:ii:ss");                
-                $('.slider-time2').html(formatDT(dt_cur_to));
+                //var dt_cur_to = new Date(ui.values[1] * 1000); //.format("yyyy-mm-dd hh:ii:ss");                
+                //$('.slider-time2').html(formatDT(dt_cur_to));
 
-                startTicks = ui.values[0] * 1000;
-                endTicks = ui.values[1] * 1000;
+                startTicks = ui.values[0];
+                endTicks = ui.values[1];
 
-            //    debugger;
-                var endDate = moment(new Date()).format('MM/DD/YYYY h:mm:ss a');
-                var startDate = moment(new Date(startTicks)).format('MM/DD/YYYY h:mm:ss a');
-                var sdf = moment(new Date(startTicks)).format();
+                $('.slider-time').html(moment(new Date(ui.values[0])).format('MM/DD/YYYY h:mm:ss a'));
+                $('.slider-time2').html(moment(new Date(ui.values[1])).format('MM/DD/YYYY h:mm:ss a'));
 
+            ////    debugger;
+            //    var endDate = moment(new Date()).format('MM/DD/YYYY h:mm:ss a');
+            //    var startDate = moment(new Date(startTicks)).format('MM/DD/YYYY h:mm:ss a');
+            //    var sdf = moment(new Date(startTicks)).format();
+                //    console.log("slider-range slide");
+                console.log("ending slider slidechange startTicks=" + startTicks + " endTicks=" + endTicks);
+
+                //GetTempsForChart();
             }
         });
 
+
         $("#slider-range").on("slidechange", function (event, ui) {
-              //    debugger;
-           // startTicks = ui.values[0];
-           // endTicks = ui.values[1];
-           //debugger;
-          //  alert(new Date(startTicks * 1000).format("yyyy-mm-dd hh:ii:ss"));
+            //    startTicks = ui.values[0];
+            //    endTicks = ui.values[1];
+            startTicks = ui.values[0];
+            endTicks = ui.values[1];
+
+            console.log("slider slidechane startticks=" + startTicks + " endticks=" + endTicks);
+            GetTempsForChart();
+
+            //    GetTempsForChart();
+            //    debugger;
+            // startTicks = ui.values[0];
+            // endTicks = ui.values[1];
+            //debugger;
+            //  alert(new Date(startTicks * 1000).format("yyyy-mm-dd hh:ii:ss"));
             //alert(moment(new Date(startTicks * 1000).format("yyyy-mm-dd hh:ii:ss"));
             //var endDate = moment(new Date()).format('MM/DD/YYYY h:mm:ss a');
             //var startDate = moment(new Date(startTicks * 1000)).format('MM/DD/YYYY h:mm:ss a');
             //var startDate = moment(new Date(startTicks * 100)).format('MM/DD/YYYY h:mm:ss a');
 
 
-           // alert(moment(new Date(startTicks * 1000).format('MM/DD/YYYY h:mm:ss a')));
+            // alert(moment(new Date(startTicks * 1000).format('MM/DD/YYYY h:mm:ss a')));
 
-          //  alert(moment.utc(new Date(startTicks * 1000).valueOf));
+            //  alert(moment.utc(new Date(startTicks * 1000).valueOf));
 
 
             //  alert(moment.utc(startTicks / 10000).format('MM/DD/YYYY h:mm:ss a'));
-        }
-        );
+            //}
+        });
 
 
         function RefreshAll() {
+            console.log("starting RefreshAll");
             GetExperiments();
             GetActiveSensors();
             GetTempsForChart();
             GetTempsForGridRaw();
             LastUdated();
-            console.log("refresh milisec: " + refreshMilSeconds);
+            console.log("refreshAll milisec: " + refreshMilSeconds);
 
             var refreshMe = setInterval(RefreshAll, refreshMilSeconds);
         };
@@ -252,6 +288,8 @@
         };
 
         function GetTempsForGridRaw() {
+            console.log("GetTempsForGridRaw");
+
             $.getJSON(urlApiGetTempsRaw,
                 function (json) {
                     $('#table tbody tr').remove();
@@ -356,11 +394,13 @@
         };
 
         function GetTempsForChart() {
+
             var startIsoDate = moment(new Date(startTicks)).format();
             var endIsoDate = moment(new Date(endTicks)).format();
+            console.log("starting GetTempsForChart  start=" + startIsoDate + " end=" + endIsoDate);
 
             var url = urlApiGetTempsRawForChartV211 + "?startIsoDate=" + startIsoDate + "&endIsoDate=" + endIsoDate;
-            debugger;
+       //     debugger;
 
             $.getJSON(url, function (data) {
             //$.getJSON(urlApiGetTempsRawForChart, function (data) {
