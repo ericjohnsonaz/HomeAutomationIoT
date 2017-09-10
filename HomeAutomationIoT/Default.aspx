@@ -152,17 +152,21 @@
 
             return false;
         });
-
+        debugger;
         var dt_from = "2017/07/01 00:00:00";
+        var dt_from_slider = new Date();
+        //var dt_from_slider = dt_from_slider.setDate(dt_from_slider.getDate() - 2);
+        var dt_from_slider = moment().subtract(3, "days").format("YYYY/MM/DD h:mm:ss");
         var dt_to = Date();
-        //var dt_to = "2014/11/24 16:37:43";
 
-        $('.slider-time').html(moment(dt_from).format('MM/DD/YYYY h:mm:ss a'));
+        $('.slider-time').html(moment(dt_from_slider).format('MM/DD/YYYY h:mm:ss a'));
         $('.slider-time2').html(moment(dt_to).format('MM/DD/YYYY h:mm:ss a'));
+
         var min_val = Date.parse(dt_from) / 1000;
+        var min_slider_val = Date.parse(dt_from_slider) / 1000;
         var max_val = Date.parse(dt_to) / 1000;
       //  debugger;
-        startTicks = new Date(min_val * 1000);
+        startTicks = new Date(min_slider_val * 1000);
         endTicks = new Date(max_val * 1000);
         console.log("doc init startticks=" + startTicks + " endticks=" + endTicks);
 
@@ -186,7 +190,7 @@
             min: min_val,
             max: max_val,
             step: 10,
-            values: [min_val, max_val],
+            values: [min_slider_val, max_val],
             slide: function (e, ui) {
                 var dt_cur_from = new Date(ui.values[0] * 1000);
                 var dt_cur_to = new Date(ui.values[1] * 1000);
