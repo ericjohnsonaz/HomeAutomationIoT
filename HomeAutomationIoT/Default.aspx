@@ -150,7 +150,7 @@
 
             return false;
         });
-        debugger;
+     //   debugger;
         var dt_from = "2017/07/01 00:00:00";
         var dt_from_slider = new Date();
         var dt_from_slider = moment().subtract(3, "days").format("YYYY/MM/DD h:mm:ss");
@@ -350,7 +350,6 @@
             var endIsoDate = moment(new Date(endTicks)).format();
 
             var url = urlApiGetTempsRawForChartV211 + "?startIsoDate=" + startIsoDate + "&endIsoDate=" + endIsoDate;
-            //   debugger;
 
             $.getJSON(url, function (data) {
                 Highcharts.chart('container', {
