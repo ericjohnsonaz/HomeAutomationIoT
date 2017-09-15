@@ -383,7 +383,10 @@
 
                     tooltip: {
                         valueDecimals: 2,
-                        valueSuffix: 'F'
+                        valueSuffix: 'F',
+                        dateTimeLabelFormats: {
+                            day: '%a %m/%d/%y %H:%M:%S'
+                        },
                     },
 
                     series: Converter(JSON.parse(data))
